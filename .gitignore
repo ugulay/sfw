@@ -1,0 +1,5 @@
+/Data/config.php
+/Cache
+/node_modules
+/Kernel/vendor
+/Data/*.db
