@@ -4,9 +4,9 @@ namespace App\Controllers;
 
 use App\Models\Post as PostModel;
 use Kernel\Controller;
-use Kernel\View;
 use Kernel\Response;
 use Kernel\Slugger;
+use Kernel\View;
 
 class Post extends Controller
 {
@@ -16,7 +16,7 @@ class Post extends Controller
 
         $data = $this->getPostDetail($slug);
 
-        if(!$data){
+        if (!$data) {
             $response = new Response();
             return $response->code(404)->showPage('Front/error404');
         }

@@ -12,7 +12,7 @@ class Post extends Model
 
     public function getPosts($where = [], $start = 0, $limit = 10)
     {
-        $where['LIMIT'] = [$start,$limit];
+        $where['LIMIT'] = [$start, $limit];
         $data = $this->DB()->select(self::TABLE, "*", $where);
         return $data;
     }
@@ -22,5 +22,5 @@ class Post extends Model
         $data = $this->DB()->get(self::TABLE, "*", $where);
         return $data;
     }
-    
+
 }
