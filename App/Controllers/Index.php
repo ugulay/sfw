@@ -4,7 +4,6 @@ namespace App\Controllers;
 
 use App\Models\Post;
 use Kernel\Controller;
-use Kernel\Environment;
 use Kernel\View;
 
 class Index extends Controller
@@ -26,6 +25,10 @@ class Index extends Controller
         $data = new Post();
         $result = $data->getPosts(['status' => 1], $start = 0, $limit = 10);
         return $result;
+    }
+
+    public function test2(){
+        echo 'asd';
     }
 
 }

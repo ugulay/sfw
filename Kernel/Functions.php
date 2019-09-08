@@ -31,3 +31,8 @@ function makeRandom($len = 32)
 {
 
 }
+
+function route(){
+    global $_router;
+    return $_router;
+}

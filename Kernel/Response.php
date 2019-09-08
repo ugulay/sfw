@@ -3,12 +3,14 @@
 namespace Kernel;
 
 use Kernel\View;
+use Kernel\Session;
 
 class Response
 {
 
     private $_code = 200;
     private $_data;
+    private $session;
 
     public function code($code = 200)
     {
@@ -45,10 +47,12 @@ class Response
         return $this;
     }
 
-    public function redirect($location)
+    public function redirect($location = null)
     {
-        header('Location : ' . $location);
-        return $this;
+        if ($location !== null) {
+            header('Location : ' . $location);
+            return $this;
+        }
     }
 
 }

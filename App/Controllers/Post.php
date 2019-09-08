@@ -21,10 +21,6 @@ class Post extends Controller
             return $response->code(404)->showPage('Front/error404');
         }
 
-        $s = new Slugger();
-        $s->model(new PostModel());
-        //echo $s->check('test5') ? 'var' : 'yok';
-
         $view = new View();
         $view->var('data', $data);
         $view->render('Front/post');

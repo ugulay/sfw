@@ -86,7 +86,7 @@ class View
 
     public function setBlocks(array $blocks)
     {
-        $this->_blocks = $_blocks;
+        $this->_blocks = $blocks;
     }
 
     public function render($file = null, $return = false)

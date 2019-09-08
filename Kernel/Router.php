@@ -9,7 +9,32 @@ use ReflectionMethod;
 class Router
 {
 
-    private $_request, $_raw, $_uri, $_routes, $_routeOptions, $_method = false;
+    private $_request, $_raw, $_uri, $_routes, $_routeOptions, $_currentMiddleware, $_method = false;
+
+    public function getRequest()
+    {
+        return $this->_request;
+    }
+
+    public function getRaw()
+    {
+        return $this->_raw;
+    }
+
+    public function getUri()
+    {
+        return $this->_uri;
+    }
+
+    public function getMethod()
+    {
+        return $this->_method;
+    }
+
+    public function getMiddleware()
+    {
+        return $this->_currentMiddleware;
+    }
 
     /**
      * Set Route via File and Prefix
@@ -87,6 +112,7 @@ class Router
         }
 
         $currMiddleware = $this->_routeOptions[$first];
+        $this->_currentMiddleware = $currMiddleware;
 
         if ($first && $this->_routes[$first] && $currMiddleware['middleware']) {
 
@@ -101,13 +127,6 @@ class Router
 
             if ($mwRes === true) {
                 return true;
-            }
-
-            if ($mwRes === false) {
-                if ($mw->method_exists('failResponse')) {
-                    return $mw->failResponse();
-                }
-                return false;
             }
 
         }
@@ -144,11 +163,11 @@ class Router
 
                 break;
             case FastRoute\Dispatcher::NOT_FOUND:
-                die('Page Not Found');
+                $this->throwError();
                 break;
             case FastRoute\Dispatcher::METHOD_NOT_ALLOWED:
                 $allowedMethods = $routeInfo[1];
-                die('Allowed request methods : ' . $allowedMethods);
+                $this->throwError('Front/error403', 403);
                 break;
         }
 
@@ -171,5 +190,11 @@ class Router
         }
 
         throw new \Exception($method . ' action not found.');
+    }
+
+    private function throwError($page = 'Front/error404', $code = 404)
+    {
+        $response = new Response();
+        return $response->code($code)->showPage($page);
     }
 }
