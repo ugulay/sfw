@@ -27,12 +27,15 @@ function slugify($text)
     return $text;
 }
 
-function makeRandom($len = 32)
+function tokenize($len = 32)
 {
-
+    $len = $len / 2;
+    $token = openssl_random_pseudo_bytes($len);
+    return bin2hex($token);
 }
 
-function route(){
+function route()
+{
     global $_router;
     return $_router;
 }

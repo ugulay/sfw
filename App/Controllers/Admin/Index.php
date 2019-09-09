@@ -19,4 +19,10 @@ class Index extends Controller
         $view->render('Admin/login');
     }
 
+    public function checkLogin()
+    {
+        $view = new View();
+        $view->render('Admin/login');
+    }
+
 }

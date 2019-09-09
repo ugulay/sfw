@@ -8,8 +8,11 @@ return [
     'DATABASE_USER' => '',
     'DATABASE_PASS' => '',
 
-    'KEY' => '',
-    'SALT' => '',
+    'KEY' => 'thisOneIsSoSecret1',
+    'SALT' => 'thisOneIsSoSecret2',
+
+    'JWT_SECRET' => 'thisOneIsSoSecret3',
+    'JWT_EXPIRE' => 3600,
 
     'URL' => 'sfw.oo',
 ];

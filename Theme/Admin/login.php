@@ -1,24 +1,41 @@
 <?php $this->extend('Admin/layout/noNavbar'); ?>
 
-<?php $this->block('title', 'BAŞLIK 2'); ?><?php $this->endBlock('title'); ?>
+<?php $this->block('title', 'Yönetici Girişi'); ?>
 
 <?php $this->block('main'); ?>
 
-    <div class="container py-3">
+    <div class="container h-100">
 
-        <?php if (Kernel\Session::getFlash('error')) { ?>
+    <div class="row  justify-content-center align-items-center  h-100">
 
-            <div class="alert alert-info">
-                Blog yazısı bulunamadı
-            </div>
+        <div class="col-4">
 
-        <?php } ?>
+            <?php
 
-        <form>
-            <div class="form-group">
-                <input type="text" class="form-control"/>
-            </div>
-        </form>
+            echo tokenize();
+
+            if (Kernel\Session::getFlash('error')) { ?>
+
+                <div class="alert alert-danger">
+                    Blog yazısı bulunamadı
+                </div>
+
+            <?php } ?>
+
+            <form action="/admin/loginCheck">
+                <div class="card">
+                    <div class="card-header p-1 text-center">
+                        Yönetim
+                    </div>
+                    <div class="card-body p-1">
+                        <input type="text" name="username" class="form-control form-control-sm mb-1" placeholder="Kullanıcı adı"/>
+                        <input type="text" name="password" class="form-control form-control-sm mb-1" placeholder="Parola"/>
+                        <button type="submit" class="btn btn-block btn-sm btn-primary">Giriş</button>
+                    </div>
+                </div>
+            </form>
+
+        </div>
 
     </div>
 

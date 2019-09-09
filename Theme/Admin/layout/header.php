@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="tr">
+<html lang="tr" class=" h-100"">
 <head>
     <!-- Required meta tags -->
     <meta charset="utf-8">
@@ -11,4 +11,4 @@
 
     <title><?= $this->placeholder('title', 'BAŞLIK'); ?></title>
 </head>
-<body>
+<body class="bg-dark h-100">
