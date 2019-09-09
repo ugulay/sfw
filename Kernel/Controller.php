@@ -4,6 +4,7 @@ namespace Kernel;
 
 use Kernel\Interfaces\IController;
 
-class Controller implements IController{
-    
+class Controller implements IController
+{
+
 }

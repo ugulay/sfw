@@ -12,24 +12,25 @@
 
             <?php
 
-            echo tokenize();
-
-            if (Kernel\Session::getFlash('error')) { ?>
+            if (Kernel\Session::flash('info')) { ?>
 
                 <div class="alert alert-danger">
-                    Blog yazısı bulunamadı
+                    <?= Kernel\Session::flash('info') ?>
                 </div>
 
-            <?php } ?>
+                <?php Kernel\Session::del('info');
+            } ?>
 
-            <form action="/admin/loginCheck">
+            <form action="/login/check" method="post">
                 <div class="card">
                     <div class="card-header p-1 text-center">
                         Yönetim
                     </div>
                     <div class="card-body p-1">
-                        <input type="text" name="username" class="form-control form-control-sm mb-1" placeholder="Kullanıcı adı"/>
-                        <input type="text" name="password" class="form-control form-control-sm mb-1" placeholder="Parola"/>
+                        <input type="text" name="username" class="form-control form-control-sm mb-1"
+                               placeholder="Kullanıcı adı"/>
+                        <input type="text" name="password" class="form-control form-control-sm mb-1"
+                               placeholder="Parola"/>
                         <button type="submit" class="btn btn-block btn-sm btn-primary">Giriş</button>
                     </div>
                 </div>

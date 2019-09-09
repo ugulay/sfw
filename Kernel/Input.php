@@ -23,7 +23,7 @@ class Input
 
     public static function get($key = null, $default = null)
     {
-        if ($_GET && array_key_exists($_GET[$key])) {
+        if ($_GET && array_key_exists($key, $_GET)) {
             return $_GET[$key];
         }
 
@@ -32,7 +32,7 @@ class Input
 
     public static function post($key = null, $default = null)
     {
-        if ($_POST && array_key_exists($_POST[$key])) {
+        if ($_POST && array_key_exists($key, $_POST)) {
             return $_POST[$key];
         }
 
@@ -41,7 +41,7 @@ class Input
 
     public static function file($key = null)
     {
-        if ($_FILES && array_key_exists($_FILES[$key])) {
+        if ($_FILES && array_key_exists($key, $_FILES)) {
             return $_FILES[$key];
         }
 
@@ -50,7 +50,7 @@ class Input
 
     public static function cookie($key = null, $default = null)
     {
-        if ($_COOKIE && array_key_exists($_COOKIE[$key])) {
+        if ($_COOKIE && array_key_exists($key, $_COOKIE)) {
             return $_COOKIE[$key];
         }
 

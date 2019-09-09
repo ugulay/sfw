@@ -11,13 +11,7 @@ class JWT
     const ALG = 'HS256';
     const HMAC_ALG = 'sha256';
 
-    private $header,
-        $header64,
-        $payload,
-        $payload64,
-        $signature = null;
-
-    function base64UrlEncode($text)
+    static function base64UrlEncode($text)
     {
         return str_replace(
             ['+', '/', '='],
@@ -26,52 +20,47 @@ class JWT
         );
     }
 
-    function header()
+    static function header()
     {
-        $this->header = json_encode(['typ' => self::TYP, 'alg' => self::ALG]);
-        $this->header64 = str_replace(['+', '/', '='], ['-', '_', ''], $this->base64UrlEncode($this->header));
-        return $this;
+        $header = json_encode(['typ' => self::TYP, 'alg' => self::ALG]);
+        return self::base64UrlEncode($header);
     }
 
-    function payload($data)
+    static function payload($data)
     {
-        $data['exp'] = date('U') + Config::get('JWT_EXPIRE');
-        $this->payload = json_encode($data);
-        $this->payload64 = str_replace(['+', '/', '='], ['-', '_', ''], $this->base64UrlEncode($this->payload));
-        return $this;
+        $data['iat'] = (int)(date('U'));
+        $data['exp'] = (int)(date('U') + Config::get('JWT_EXPIRE'));
+        return self::base64UrlEncode(json_encode($data));
     }
 
-    function signature()
+    static function signature($header = null, $payload = null)
     {
-        $this->signature = hash_hmac(self::HMAC_ALG, $this->header64 . "." . $this->payload64, Config::get('JWT_SECRET'), true);
-        return $this;
+        return hash_hmac(self::HMAC_ALG, $header . "." . $payload, Config::get('JWT_SECRET'));
     }
 
-    function getJwt()
+    public static function encode($data)
     {
-        $jwt = $this->header64 . "." . $this->payload64 . "." . $this->signature;
-        return $jwt;
+        $header = self::header();
+        $payload = self::payload($data);
+        $signature = self::signature($header, $payload);
+        return $header . "." . $payload . "." . $signature;
     }
 
-    function checkJWT($jwt = null)
+    public static function check($jwt = null)
     {
+
         $tokenParts = explode('.', $jwt);
         $header = base64_decode($tokenParts[0]);
-        $payload = base64_decode($tokenParts[1]);
+        $payload = json_decode(base64_decode($tokenParts[1]), true);
         $signatureProvided = $tokenParts[2];
 
-        $expiration = $payload["exp"];
+        $signature = self::signature($tokenParts[0], $tokenParts[1]);
 
-        $base64UrlHeader = $this->base64UrlEncode($header);
-        $base64UrlPayload = $this->base64UrlEncode($payload);
-        $signature = hash_hmac(self::HMAC_ALG, $base64UrlHeader . "." . $base64UrlPayload, Config::get('JWT_SECRET'), true);
-        $base64UrlSignature = $this->base64UrlEncode($signature);
-
-        if (date('U') > $expiration) {
+        if (date('U') > $payload["exp"]) {
             return false;
         }
 
-        if ($base64UrlSignature !== $signatureProvided) {
+        if ($signature !== $signatureProvided) {
             return false;
         }
 

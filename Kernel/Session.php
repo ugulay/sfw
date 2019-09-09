@@ -65,16 +65,11 @@ class Session
 
     public static function flash($key = null, $data = null)
     {
-        self::set($key, $data);
-    }
-
-    public static function getFlash($key)
-    {
-        if (self::has($key)) {
-            $data = self::get($key);
-            self::del($key);
-            return $data;
+        if ($data == null) {
+            $get = self::get($key);
+            return $get;
         }
+        return self::set($key, $data);
     }
 
 }

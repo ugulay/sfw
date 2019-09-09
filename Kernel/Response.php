@@ -50,8 +50,7 @@ class Response
     public function redirect($location = null)
     {
         if ($location !== null) {
-            header('Location : ' . $location);
-            return $this;
+            return header('Location : ' . $location, true, 301);
         }
     }
 

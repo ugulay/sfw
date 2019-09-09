@@ -16,8 +16,8 @@ class Admin extends Middleware
 
         $route = route();
         $this->session = new Session();
-        if(!$this->session::has('auth') && $route->getUri() != 'admin/login'){
-            header('Location: /admin/login' );
+        if (!$this->session::has('auth') && $route->getUri() != 'login') {
+            header('Location: /login');
             return false;
         }
 

@@ -8,12 +8,12 @@ define('DEV', true);
 /**
  * Debug Mode
  */
-if(DEV){
+if (DEV) {
     error_reporting(E_ALL);
     ini_set('error_reporting', E_ALL);
-}else{
+} else {
     error_reporting(0);
-    ini_set('error_reporting',0);
+    ini_set('error_reporting', 0);
 }
 
 /**
@@ -34,7 +34,7 @@ $_config->parse();
 /**
  * Global functions
  */
-require (ROOT.'/Kernel/Functions.php');
+require(ROOT . '/Kernel/Functions.php');
 
 /**
  * Router
