@@ -67,6 +67,7 @@ class Session
     {
         if ($data == null) {
             $get = self::get($key);
+            self::del($key);
             return $get;
         }
         return self::set($key, $data);
