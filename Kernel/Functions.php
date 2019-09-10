@@ -39,3 +39,21 @@ function route()
     global $_router;
     return $_router;
 }
+
+function __($key = null, $params = [])
+{
+    \Kernel\Session::start();
+    $lang = \Kernel\Session::get('language');
+    $lang = $lang ? $lang : \Kernel\Config::get('DEFAULT_LANG');
+    $file = ROOT . '/App/Lang/' . $lang . '.php';
+    if (!is_readable($file)) {
+        \Kernel\Session::set('language', \Kernel\Config::set('DEFAULT_LANG'));
+        throw new \Exception($file . ' lang file load failed.');
+    }
+    $lang = require $file;
+    if (array_key_exists($key, $lang)) {
+        $val = $lang[$key];
+        return vsprintf($val, $params);
+    }
+    return $key;
+}
