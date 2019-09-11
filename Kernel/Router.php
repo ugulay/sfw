@@ -114,12 +114,12 @@ class Router
         $currMiddleware = $this->_routeOptions[$first];
         $this->_currentMiddleware = $currMiddleware;
 
-        if ($first && $this->_routes[$first] && $currMiddleware['middleware']) {
+        if ($first && $this->_routes[$first] && isset($currMiddleware['middleware'])) {
 
             $class = $currMiddleware['middleware'];
 
             if (!class_exists($class)) {
-                throw new \Exception($class . 'middleware class not found.');
+                throw new \Exception($class . ' middleware class not found.');
             }
 
             $mw = new $class();

@@ -28,7 +28,11 @@ class Session
 
     public static function has($key = '')
     {
+        if (!isset($_SESSION)) {
+            throw new \Exception('Session not started');
+        }
         return array_key_exists($key, $_SESSION);
+
     }
 
     public static function get($key)
