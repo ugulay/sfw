@@ -15,4 +15,13 @@ return [
     //
     "auth.loginFormTitle" => "Kullanıcı girişi",
     "auth.registrationFormTitle" => "Yeni kullanıcı kayıt formu",
+    //
+    "validation.required" => "%s alanı boş geçilemez.",
+    "validation.min" => "%s minimum %s karakter uzunluğunda olmalıdır.",
+    "validation.max" => "%s maksimum %s karakter uzunluğunda olmalıdır.",
+    "validation.string" => "%s alanı yalnızca harf içermelidir.",
+    "validation.numeric" => "%s alanı yalnızca rakam içermelidir.",
+    "validation.email" => "%s geçerli bir e-posta adresi olmalıdır.",
+    "validation.same" => "%s alanı ile %s alanı aynı olmalıdır.",
+    "validation.equal" => "%s alanı \'%s\' eşit olmalıdır.",
 ];

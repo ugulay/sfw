@@ -77,4 +77,9 @@ class Session
         return self::set($key, $data);
     }
 
+    public function old($key = null)
+    {
+        
+    }
+
 }

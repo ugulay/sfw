@@ -8,13 +8,21 @@
 
         <div class="col-4">
 
-        <?php if (\Kernel\Session::flash('info')) {?>
-                <div class="alert alert-danger"><?=\Kernel\Session::flash('info')?></div>
+        <?php
+        $errors = \Kernel\Session::flash('error');
+        if ($errors) {?>
+                <div class="alert alert-danger">
+                    <ul class="list m-0 p-0 px-3">
+                        <?php foreach ($errors as $error) {?>
+                            <li><?=$error?></li>
+                        <?php }?>
+                    </ul>
+                </div>
         <?php }?>
 
                 <div class="card card-default">
 
-                    <form class="form" href="/auth/registration" type="post">
+                    <form class="form" action="/auth/registration" method="post">
 
                         <div class="card-header">
                                 <span class="card-title p-0 m-0"><?=__('auth.registrationFormTitle')?></span>
@@ -24,27 +32,27 @@
 
                             <div class="form-group">
                                 <label>Ad *</label>
-                                <input type="text" name="name" class="form-control" required="">
+                                <input type="text" name="name" class="form-control" >
                             </div>
 
                             <div class="form-group">
                                 <label>Soyad *</label>
-                                <input type="text" name="surname" class="form-control" required="">
+                                <input type="text" name="surname" class="form-control" >
                             </div>
 
                             <div class="form-group">
                                 <label>E-Posta Adresi *</label>
-                                <input type="email" name="email" class="form-control" required="">
+                                <input type="email" name="email" class="form-control" >
                             </div>
 
                             <div class="form-group">
                                 <label>Parola *</label>
-                                <input type="password" name="password" class="form-control" required="">
+                                <input type="password" name="password" class="form-control" >
                             </div>
-                            
+
                             <div class="form-group">
                                 <label>Parola (Tekrarı) *</label>
-                                <input type="password" name="password2" class="form-control" required="">
+                                <input type="password" name="password2" class="form-control" >
                             </div>
 
                             <div class="form-group">

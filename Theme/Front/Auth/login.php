@@ -14,7 +14,7 @@
 
                 <div class="card card-default">
 
-                        <form class="form" href="/auth" type="post">
+                        <form class="form" action="/auth" method="post">
 
                         <div class="card-header">
                                 <span class="card-title p-0 m-0">Oturum Doğrulama</span>
