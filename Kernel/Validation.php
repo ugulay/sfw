@@ -3,12 +3,31 @@
 namespace Kernel;
 
 use Kernel\Input;
+use Kernel\Model;
 
 class Validation
 {
 
     private $rules, $method, $fails, $alias, $inputs = null;
+
     const PREFIX = 'rule_';
+
+    const ALLOWED_RULES = [
+        "required",
+        "string",
+        "numeric",
+        "min",
+        "max",
+        "email",
+        "same",
+        "equal",
+        "greater",
+        "greaterEqual",
+        "lower",
+        "lowerEqual",
+        "unique",
+        "regex",
+    ];
 
     public function rules($method = null, $rules = [], $alias = [])
     {
@@ -151,6 +170,45 @@ class Validation
         return true;
     }
 
+    public function rule_regex($key = null, $param = null)
+    {
+        $data = $this->getInput($key);
+        $key = $this->getAlias($key);
+        $message = __('validation.regex', [$key, $param]);
+        if (!preg_match($param, $data)) {
+            return $message;
+        }
+        return true;
+    }
+
+    public function rule_unique($key = null, $param = null)
+    {
+        $data = $this->getInput($key);
+        $key = $this->getAlias($key);
+
+        $message = __('validation.unique', $key);
+
+        $param = explode('.', $param);
+        $table = $param[0];
+        $col = $param[1];
+        $id = false;
+
+        $where = [$col => $data];
+
+        if (isset($param[2])) {
+            $id = $param[2];
+            $where["AND"][] = ['id[!]' => $id];
+            $where["AND"][] = [$col => $data];
+        }
+
+        $check = Model::DB()->count($table, $col, $where);
+
+        if ($check) {
+            return $message;
+        }
+        return true;
+    }
+
     public function parseRule($key, $rules)
     {
 
@@ -168,8 +226,15 @@ class Validation
 
     public function check($rule = null, $param = [])
     {
+
+        if (!in_array($rule, self::ALLOWED_RULES) && !method_exists($this, self::PREFIX . $rule)) {
+            throw new \Exception($rule . ' rule method not found.');
+        }
+
         $key = $param[0];
+
         $res = call_user_func_array([$this, self::PREFIX . $rule], $param);
+
         if ($res !== true) {
             $this->fails[$key] = $res;
         }

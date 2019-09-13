@@ -22,6 +22,11 @@ return [
     "validation.string" => "%s only letters.",
     "validation.numeric" => "%s only numeric.",
     "validation.email" => "%s enter a valid e-mail address.",
-    "validation.same" => "%s alanı ile %s alanı aynı olmalıdır.",
-    "validation.equal" => "%s alanı \'%s\' eşit olmalıdır.",    
+    "validation.same" => "%s input value need to be same as %s input value.",
+    "validation.equal" => "%s input not equals to \'%s\'.",
+    "validation.greater" => "%s input need bigger than \'%s\' value.",
+    "validation.greaterEqual" => "%s input need bigger than \'%s\' or equals.",
+    "validation.lower" => "%s input need lower than \'%s\' value.",
+    "validation.lowerEqual" => "%s input need lower than \'%s\' or equals.",
+    "validation.unique" => "%s input value exists in database.",
 ];

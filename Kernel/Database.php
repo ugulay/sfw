@@ -44,7 +44,7 @@ final class Database
                 "charset" => 'utf8',
                 "server" => $cfg['DATABASE_HOST'],
                 "username" => $cfg['DATABASE_USER'],
-                "password" => $cfg['DATABASE_PASS'],
+                "password" => $cfg['DATABASE_PASS']
             ]);
         }
 

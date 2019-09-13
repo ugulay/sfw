@@ -23,5 +23,10 @@ return [
     "validation.numeric" => "%s alanı yalnızca rakam içermelidir.",
     "validation.email" => "%s geçerli bir e-posta adresi olmalıdır.",
     "validation.same" => "%s alanı ile %s alanı aynı olmalıdır.",
-    "validation.equal" => "%s alanı \'%s\' eşit olmalıdır.",
+    "validation.equal" => "%s alanı \'%s\' değerine eşit olmalıdır.",
+    "validation.greater" => "%s alanı \'%s\' değerinden büyük olmalıdır.",
+    "validation.greaterEqual" => "%s alanı \'%s\' değerinden büyük veya eşit olmalıdır.",
+    "validation.lower" => "%s alanı \'%s\' değerinden küçük olmalıdır.",
+    "validation.lowerEqual" => "%s alanı \'%s\' değerinden küçük veya eşit olmalıdır.",
+    "validation.unique" => "%s alanındaki değer zaten mevcut.",
 ];
