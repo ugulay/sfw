@@ -77,9 +77,20 @@ class Session
         return self::set($key, $data);
     }
 
-    public function old($key = null)
+    public static function flashInputs($inputs = [])
     {
-        
+        self::set('inputs', $inputs);
+    }
+
+    public static function getFlashInput($key = null)
+    {
+        $inputs = self::get('inputs');
+        $get = null;
+        if (is_array($inputs) && array_key_exists($key, $inputs)) {
+            $get = $inputs[$key];
+            unset($_SESSION['inputs'][$key]);
+        }
+        return $get;
     }
 
 }

@@ -6,15 +6,22 @@ return [
     "common.cancel" => "İptal",
     "common.close" => "Kapat",
     "common.exit" => "Çıkış",
-    "common.email" => "E-Posta",
-    "common.username" => "Kullanıcı adı",
-    "common.password" => "Parola",
     "common.link" => "Link",
     //
     "error.pageNotFound" => "Aradığınız sayfa bulunamadı.",
+    "error.permissionDenied" => "Bu sayfayı görüntülemek için yetkiniz bulunmamaktadır.",
     //
     "auth.loginFormTitle" => "Kullanıcı girişi",
     "auth.registrationFormTitle" => "Yeni kullanıcı kayıt formu",
+    "auth.alreadyRegisteredLogin" => "Kayıtlı bir üyeyim",
+    "auth.register" => "Kayıt",
+    "auth.login" => "Giriş",
+    "auth.username" => "Kullanıcı adı",
+    "auth.name" => "Ad",
+    "auth.surname" => "Soyad",
+    "auth.emailAddress" => "E-Posta Adresi",
+    "auth.password" => "Parola",
+    "auth.passwordRepeat" => "Parola (Tekrar)",
     //
     "validation.required" => "%s alanı boş geçilemez.",
     "validation.min" => "%s minimum %s karakter uzunluğunda olmalıdır.",
@@ -29,4 +36,5 @@ return [
     "validation.lower" => "%s alanı \'%s\' değerinden küçük olmalıdır.",
     "validation.lowerEqual" => "%s alanı \'%s\' değerinden küçük veya eşit olmalıdır.",
     "validation.unique" => "%s alanındaki değer zaten mevcut.",
+    "validation.regex" => "%s alanındaki değer kurallı ifadele ile uyuşmuyor.",
 ];

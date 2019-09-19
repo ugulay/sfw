@@ -57,3 +57,9 @@ function __($key = null, $params = [])
     }
     return $key;
 }
+
+function old($key = null)
+{
+    \Kernel\Session::start();
+    return \Kernel\Session::getFlashInput($key);
+}

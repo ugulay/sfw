@@ -3,7 +3,6 @@
 namespace Kernel;
 
 use Kernel\View;
-use Kernel\Session;
 
 class Response
 {
@@ -11,6 +10,7 @@ class Response
     private $_code = 200;
     private $_data;
     private $session;
+    private $inputs = [];
 
     public function code($code = 200)
     {
@@ -45,6 +45,12 @@ class Response
         $view = new View();
         $view->render($file);
         return $this;
+    }
+
+    public function withInputs($inputs = [])
+    {
+        $this->inputs = $inputs;
+        \Kernel\Session::flashInputs($inputs);
     }
 
     public function redirect($location = null)

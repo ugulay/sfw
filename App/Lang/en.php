@@ -6,15 +6,22 @@ return [
     "common.cancel" => "Cancel",
     "common.close" => "Close",
     "common.exit" => "Exit",
-    "common.email" => "E-Mail",
-    "common.username" => "Username",
-    "common.password" => "Password",
     "common.link" => "Link",
     //
     "error.pageNotFound" => "Page not found.",
+    "error.permissionDenied" => "Permisson denied.",
     //
     "auth.loginFormTitle" => "Login form",
     "auth.registrationFormTitle" => "Registration form of new user",
+    "auth.alreadyRegisteredLogin" => "I have account, sign in",
+    "auth.register" => "Sign Up",
+    "auth.login" => "Sign In",
+    "auth.username" => "Username",
+    "auth.name" => "Name",
+    "auth.surname" => "Surname",
+    "auth.emailAddress" => "E-Mail Address",
+    "auth.password" => "Password",
+    "auth.passwordRepeat" => "Password (Again)",
     //
     "validation.required" => "%s can not blank.",
     "validation.min" => "%s input need min. %s length.",
@@ -29,4 +36,5 @@ return [
     "validation.lower" => "%s input need lower than \'%s\' value.",
     "validation.lowerEqual" => "%s input need lower than \'%s\' or equals.",
     "validation.unique" => "%s input value exists in database.",
+    "validation.regex" => "%s input value is not pass the regular expression rule.",
 ];
