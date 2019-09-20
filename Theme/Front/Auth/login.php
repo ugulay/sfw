@@ -8,8 +8,8 @@
 
         <div class="col-4">
 
-        <?php if (\Kernel\Session::flash('info')) {?>
-                <div class="alert alert-danger"><?=\Kernel\Session::flash('info')?></div>
+        <?php $errors = \Kernel\Session::flash('error');if ($errors) {?>
+                <div class="alert alert-danger"><?=$errors?></div>
         <?php }?>
 
                 <div class="card card-default">
@@ -17,25 +17,25 @@
                         <form class="form" action="/auth" method="post">
 
                         <div class="card-header">
-                                <span class="card-title p-0 m-0">Oturum Doğrulama</span>
+                                <span class="card-title p-0 m-0"><?=__('auth.loginFormTitle')?></span>
                         </div>
 
                         <div class="collapse show" id="demo">
 
                                 <div class="card-body">
                                         <div class="form-group">
-                                                <label>E-Posta Adresi</label>
-                                                <input type="email" name="email" class="form-control" required="">
+                                                <label><?=__('auth.emailAddress')?></label>
+                                                <input type="email" name="email" class="form-control" required="" value="<?=old('email')?>">
                                         </div>
                                         <div class="form-group">
-                                                <label>Parola</label>
-                                                <input type="password" name="password" class="form-control" required="" minlength="6">
+                                                <label><?=__('auth.password')?></label>
+                                                <input type="password" name="password" class="form-control" required="" value="<?=old('password')?>">
                                         </div>
                                 </div>
 
                                 <div class="card-footer">
-                                        <a href="/auth/registration" class="btn btn-link float-left">Yeni Kullanıcı</a>
-                                        <button type="submit" class="btn btn-primary float-right">Oturum Aç</button>
+                                        <a href="/auth/registration" class="btn btn-link float-left"><?=__('auth.register')?></a>
+                                        <button type="submit" class="btn btn-primary float-right"><?=__('auth.login')?></button>
                                         <div class="clearfix"></div>
                                 </div>
 

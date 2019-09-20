@@ -1,4 +1,7 @@
-
+</div>
+  <footer class="bg-white text-center p-2">
+    <span class="copyRight">Görev Tanımı 2018 <?php /*| Powered By <span style="font-weight:bolder;"><span style="color:#ff6c00;">T</span>-Soft</span> */ ?></span>
+  </footer>
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>

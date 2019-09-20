@@ -15,6 +15,7 @@ return [
     'SMTP_USER' => '',
     'SMTP_PASS' => '',
     'SMTP_FROM' => '',
+    'SMTP_NAME' => '',
 
     'KEY' => 'thisOneIsSoSecret1',
     'SALT' => 'thisOneIsSoSecret2',

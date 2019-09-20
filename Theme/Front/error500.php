@@ -3,8 +3,6 @@
 
 <?php $this->block('title','Aradığınız sayfa bulunamadı.');?>
 
-<?php $this->block('title','Aradığınız sayfa bulunamadı.');?>
-
 <?php $this->block('main');?>
 
     <div class="container py-3">

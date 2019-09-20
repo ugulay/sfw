@@ -22,6 +22,9 @@ return [
     "auth.emailAddress" => "E-Mail Address",
     "auth.password" => "Password",
     "auth.passwordRepeat" => "Password (Again)",
+    "auth.loginFailed" => "Login failed.",
+    "auth.registerFailed" => "Registration failed.",
+    "auth.logout" => "Sign Out",
     //
     "validation.required" => "%s can not blank.",
     "validation.min" => "%s input need min. %s length.",

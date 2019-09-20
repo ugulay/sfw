@@ -31,44 +31,35 @@
                         <div class="card-body">
 
                             <div class="form-group">
-                                <label>Ad *</label>
-                                <input type="text" name="name" class="form-control" >
+                                <label><?=__('auth.name')?> *</label>
+                                <input type="text" name="name" class="form-control" value="<?=old("name")?>">
                             </div>
 
                             <div class="form-group">
-                                <label>Soyad *</label>
-                                <input type="text" name="surname" class="form-control" >
+                                <label><?=__('auth.surname')?> *</label>
+                                <input type="text" name="surname" class="form-control" value="<?=old("surname")?>">
                             </div>
 
                             <div class="form-group">
-                                <label>E-Posta Adresi *</label>
-                                <input type="email" name="email" class="form-control" >
+                                <label><?=__('auth.emailAddress')?> *</label>
+                                <input type="text" name="email" class="form-control" value="<?=old("email")?>">
                             </div>
 
                             <div class="form-group">
-                                <label>Parola *</label>
+                                <label><?=__('auth.password')?> *</label>
                                 <input type="password" name="password" class="form-control" >
                             </div>
 
                             <div class="form-group">
-                                <label>Parola (Tekrarı) *</label>
+                                <label><?=__('auth.passwordRepeat')?> *</label>
                                 <input type="password" name="password2" class="form-control" >
-                            </div>
-
-                            <div class="form-group">
-                                <label>Doğum Tarihi</label>
-                                <input type="date" name="birthday" class="form-control">
-                            </div>
-
-                            <div class="form-group">
-
                             </div>
 
                         </div>
 
                         <div class="card-footer">
-                            <a href="/auth" class="btn btn-link float-left">Kayıtlı Bir Üyeyim</a>
-                            <button type="submit" class="btn btn-primary float-right">Kayıt Ol</button>
+                            <a href="/auth" class="btn btn-link float-left"><?=__('auth.alreadyRegisteredLogin')?></a>
+                            <button type="submit" class="btn btn-primary float-right"><?=__('auth.register')?></button>
                             <div class="clearfix"></div>
                         </div>
 

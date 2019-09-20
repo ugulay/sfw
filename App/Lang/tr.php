@@ -22,6 +22,9 @@ return [
     "auth.emailAddress" => "E-Posta Adresi",
     "auth.password" => "Parola",
     "auth.passwordRepeat" => "Parola (Tekrar)",
+    "auth.loginFailed" => "Oturum doğrulanamadı.",
+    "auth.registerFailed" => "Kayıt işlemi başarısız.",
+    "auth.logout" => "Çıkış",
     //
     "validation.required" => "%s alanı boş geçilemez.",
     "validation.min" => "%s minimum %s karakter uzunluğunda olmalıdır.",

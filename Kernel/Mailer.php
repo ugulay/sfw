@@ -4,6 +4,7 @@ namespace Kernel;
 
 use Kernel\Config;
 use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
 
 class Mailer
 {
@@ -81,19 +82,19 @@ class Mailer
 
     public function subject($text = null)
     {
-        $this->mailer->Subject($text);
+        $this->mailer->Subject = $text;
         return $this;
     }
 
     public function body($text = null)
     {
-        $this->mailer->Body($text);
+        $this->mailer->Body = $text;
         return $this;
     }
 
     public function altBody($text = null)
     {
-        $this->mailer->AltBody($text);
+        $this->mailer->AltBody = $text;
         return $this;
     }
 
