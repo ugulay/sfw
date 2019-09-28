@@ -56,6 +56,23 @@ class Router
         return trim(preg_replace('/\/{2,}/', '/', $route), '/');
     }
 
+    public static function named($name = null, $col = 'route')
+    {
+        $arr = self::$_named;
+
+        $get = array_key_exists($name, $arr);
+
+        if (!$get) {
+            return false;
+        }
+
+        if ($col == false) {
+            return $arr[$name];
+        }
+
+        return $arr[$name][$col];
+    }
+
     /**
      * Dispatch
      */
@@ -92,7 +109,8 @@ class Router
                             self::$_named[$name] = [
                                 'route' => $route[1],
                                 'handler' => $namespace . $route[2],
-                                'options' => $options
+                                'method' => $route[0],
+                                'options' => $options,
                             ];
                         }
 
