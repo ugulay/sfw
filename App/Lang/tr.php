@@ -23,8 +23,11 @@ return [
     "auth.password" => "Parola",
     "auth.passwordRepeat" => "Parola (Tekrar)",
     "auth.loginFailed" => "Oturum doğrulanamadı.",
+    "auth.registerSuccess" => "Kayıt işlemi başarılı. E-Posta adresinize gelen aktivasyonu kontrol ediniz.",
     "auth.registerFailed" => "Kayıt işlemi başarısız.",
     "auth.logout" => "Çıkış",
+    "auth.activationCodeError" => "Aktivasyon kodunuz geçerli değil veya zaten kullanılmış.",
+    "auth.activationCodeSuccess" => "Aktivasyon başarıyla gerçekleştirildi. Şimdi giriş yapabilirsiniz.",
     //
     "validation.required" => "%s alanı boş geçilemez.",
     "validation.min" => "%s minimum %s karakter uzunluğunda olmalıdır.",

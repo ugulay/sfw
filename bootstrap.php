@@ -39,15 +39,13 @@ $_config->parse();
 /**
  * Global functions
  */
-require(ROOT . '/Kernel/Functions.php');
+require ROOT . '/Kernel/Functions.php';
 
 /**
  * Router
  */
+require _DATA . 'routes.php';
+
 global $_router;
 $_router = new Kernel\Router();
-$_router->setRoutes('', 'web');
-$_router->setRoutes('auth', 'auth');
-$_router->setRoutes('api', 'api');
-$_router->setRoutes('admin', 'admin', ['middleware' => '\App\Middlewares\Admin']);
 $_router->dispatch();

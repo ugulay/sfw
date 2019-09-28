@@ -17,10 +17,21 @@ class User extends Model
         return $data;
     }
 
+    public function addUser($data = [])
+    {
+        $data = $this->DB()->insert(self::TABLE, $data);
+        return $this->DB()->id();
+    }
+
+    public function updateUser($data = [], $where = [])
+    {
+        $data = $this->DB()->update(self::TABLE, $data, $where);
+        return $data->rowCount();
+    }
+
     public function checkLogin($where = [])
     {
-        return $this->DB()->has(self::TABLE, $where);
-
+        return $this->DB()->count(self::TABLE, $where);
     }
 
     public function getUser($where = [])
@@ -28,6 +39,5 @@ class User extends Model
         $data = $this->DB()->get(self::TABLE, "*", $where);
         return $data;
     }
-
 
 }

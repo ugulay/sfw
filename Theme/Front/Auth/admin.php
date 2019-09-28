@@ -14,7 +14,7 @@
 
                 <div class="card card-default">
 
-                        <form class="form" action="/auth" method="post">
+                        <form class="form" action="/auth/admin" method="post">
 
                         <div class="card-header">
                                 <span class="card-title p-0 m-0"><?=__('auth.loginFormTitle')?></span>
@@ -34,7 +34,6 @@
                                 </div>
 
                                 <div class="card-footer">
-                                        <a href="/auth/registration" class="btn btn-link float-left"><?=__('auth.register')?></a>
                                         <button type="submit" class="btn btn-primary float-right"><?=__('auth.login')?></button>
                                         <div class="clearfix"></div>
                                 </div>

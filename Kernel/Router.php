@@ -9,7 +9,8 @@ use ReflectionMethod;
 class Router
 {
 
-    private $_request, $_raw, $_uri, $_routes, $_routeOptions, $_currentMiddleware, $_method = false;
+    private $_request, $_raw, $_uri, $_method = false;
+    static $_named, $_routes = [];
 
     public function getRequest()
     {
@@ -31,28 +32,12 @@ class Router
         return $this->_method;
     }
 
-    public function getMiddleware()
-    {
-        return $this->_currentMiddleware;
-    }
-
     /**
      * Set Route via File and Prefix
      */
-    public function setRoutes($prefix = null, $routeFile = false, $options = []): bool
+    public static function bind($options, $route)
     {
-
-        $file = _DATA . $routeFile . '.php';
-
-        if (file_exists($file) && is_readable($file)) {
-            $this->_routes[$prefix] = require $file;
-            $this->_routeOptions[$prefix] = $options;
-            return true;
-        }
-
-        throw new \Exception($file . 'no route file found.');
-
-        return false;
+        self::$_routes[] = [$options, $route];
     }
 
     /**
@@ -60,7 +45,7 @@ class Router
      */
     private function getRoutes(): array
     {
-        return $this->_routes;
+        return self::$_routes;
     }
 
     /**
@@ -82,15 +67,45 @@ class Router
         $this->_request = parse_url($this->_raw);
         $this->_uri = $this->fixRoute($this->_request['path']);
 
-        $dispatcher = FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $r) {
-            foreach ($this->getRoutes() as $prefix => $routes) {
-                $prefix = strlen($prefix) ? $prefix . '/' : $prefix;
-                foreach ($routes as $route) {
-                    $route[1] = $this->fixRoute($prefix . $route[1]);
-                    $r->addRoute($route[0], $route[1], $route[2]);
+        $allRoutes = $this->getRoutes();
+
+        $dispatcher = FastRoute\simpleDispatcher(
+
+            function (FastRoute\RouteCollector $r) use ($allRoutes) {
+
+                foreach ($allRoutes as $routesArr) {
+
+                    $options = $routesArr[0];
+
+                    $prefix = strlen($options['prefix']) ? $options['prefix'] . '/' : $options['prefix'];
+                    $namespace = strlen($options['namespace']) ? $options['namespace'] : '';
+
+                    $routes = $routesArr[1];
+
+                    foreach ($routes as $route) {
+
+                        $route[1] = $this->fixRoute($prefix . $route[1]);
+
+                        $name = isset($route[3]) && array_key_exists('name', $route[3]) ? $route[3]['name'] : false;
+
+                        if ($name) {
+                            self::$_named[$name] = [
+                                'route' => $route[1],
+                                'handler' => $namespace . $route[2],
+                                'options' => $options
+                            ];
+                        }
+
+                        $r->addRoute($route[0], $route[1], $namespace . $route[2]);
+
+                    }
+
                 }
+
             }
-        });
+
+        );
+        print_r(self::$_named);
 
         $routeInfo = $dispatcher->dispatch($this->_method, $this->_uri);
 
@@ -98,47 +113,11 @@ class Router
 
     }
 
-    /**
-     * Guard works like middleware, this is wh i called middleware, i just love them =)
-     */
-    private function checkMiddleware()
-    {
-        $explode = $this->fixRoute($this->_uri);
-        $explode = explode('/', $this->_uri);
-        $first = $explode[0];
-
-        if (!isset($this->_routeOptions[$first])) {
-            return false;
-        }
-
-        $currMiddleware = $this->_routeOptions[$first];
-        $this->_currentMiddleware = $currMiddleware;
-
-        if ($first && $this->_routes[$first] && isset($currMiddleware['middleware'])) {
-
-            $class = $currMiddleware['middleware'];
-
-            if (!class_exists($class)) {
-                throw new \Exception($class . ' middleware class not found.');
-            }
-
-            $mw = new $class();
-            $mwRes = $mw->handler();
-
-            if ($mwRes === true) {
-                return true;
-            }
-
-        }
-    }
-
     private function handleRoute($routeInfo)
     {
 
         switch ($routeInfo[0]) {
             case FastRoute\Dispatcher::FOUND:
-
-                $this->checkMiddleware();
 
                 $handler = $routeInfo[1];
                 $vars = $routeInfo[2];
@@ -159,7 +138,7 @@ class Router
                     return $this->runClass($controller, $method, $vars);
                 }
 
-                throw new \Exception('An error accqauired. Route handler is not correct.');
+                throw new \Exception('An error accquired. Route handler is not correct.');
 
                 break;
             case FastRoute\Dispatcher::NOT_FOUND:

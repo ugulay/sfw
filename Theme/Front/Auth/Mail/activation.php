@@ -13,10 +13,10 @@
         </div>
         <div style="display: flex;flex-wrap: wrap;flex-direction: column;padding: 20px 10px;line-height: 25px;font-size: 15px;">
             <span>Aktivasyon için aşağıdaki bağlantıya tıklaynız.</span>
-            <span><a href="">Aktivasyon Bağlantısı.</a></span>
+            <span><a href="//<?=\Kernel\Config::get('URL')?>/auth/activation/<?=$code?>">Aktivasyon Bağlantısı.</a></span>
         </div>
         <div style="display: flex;flex-wrap: wrap;flex-direction: column;padding: 10px 10px;border-top: 1px solid #e4e4e4;text-align: center;font-size: 13px;">
-            <a href="//gorevtanimi.com" style="text-decoration:none; color: #808080;">gorevtanimi.com</a>
+            <a href="//<?=\Kernel\Config::get('URL')?>" style="text-decoration:none; color: #808080;"><?=\Kernel\Config::get('URL')?></a>
         </div>
     </div>
 </body>

@@ -9,6 +9,11 @@ use Kernel\View;
 class Mail extends Controller
 {
 
+    private static function mailInstance()
+    {
+        return new Mailer;
+    }
+
     public static function sendActivationMail($code = null, $address = null)
     {
 
@@ -16,8 +21,11 @@ class Mail extends Controller
         $view->var('code', $code);
         $body = $view->render('Mail/activation', true);
 
-        $mailer = new Mailer;
-        $mailer->addAddress($address)->subject(__('mail.activationTitle'))->body($body)->send();
+        $mailer = self::mailInstance();
+        return $mailer->addAddress($address)
+            ->subject(__('mail.activationTitle'))
+            ->body($body)
+            ->send();
 
     }
 

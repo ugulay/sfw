@@ -9,6 +9,18 @@
         <div class="col-4">
 
         <?php
+        $success = \Kernel\Session::flash('success');
+        if ($success) {?>
+            <div class="alert alert-success">
+                <ul class="list m-0 p-0 px-3">
+                    <?php foreach ($success as $success) {?>
+                        <li><?=$success?></li>
+                    <?php }?>
+                </ul>
+            </div>
+        <?php }?>
+
+        <?php
         $errors = \Kernel\Session::flash('error');
         if ($errors) {?>
                 <div class="alert alert-danger">

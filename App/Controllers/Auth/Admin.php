@@ -9,7 +9,7 @@ use Kernel\Session;
 use Kernel\Validation;
 use Kernel\View;
 
-class Login extends Controller
+class Admin extends Controller
 {
 
     private $session;
@@ -22,7 +22,7 @@ class Login extends Controller
     public function index()
     {
         $view = new View();
-        $view->render('Front/Auth/login');
+        $view->render('Front/Auth/admin');
     }
 
     public function login()
@@ -55,6 +55,7 @@ class Login extends Controller
             "email" => $username,
             "password" => $password,
             "status" => 1,
+            "root" => 1
         ]];
 
         $user = new User;

@@ -23,8 +23,11 @@ return [
     "auth.password" => "Password",
     "auth.passwordRepeat" => "Password (Again)",
     "auth.loginFailed" => "Login failed.",
+    "auth.registerSuccess" => "Registration success.Please check activation code to send your registered e-mail.",
     "auth.registerFailed" => "Registration failed.",
     "auth.logout" => "Sign Out",
+    "auth.activationCodeError" => "Your activation code is not valid or has already been used.",
+    "auth.activationCodeSuccess" => "Activation was performed successfully. You can now log in.",
     //
     "validation.required" => "%s can not blank.",
     "validation.min" => "%s input need min. %s length.",

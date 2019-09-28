@@ -63,3 +63,7 @@ function old($key = null)
     \Kernel\Session::start();
     return \Kernel\Session::getFlashInput($key);
 }
+
+function sqlTimestamp(){
+    return date("Y-m-d H:i:s");
+}
