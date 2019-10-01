@@ -3,7 +3,6 @@
 namespace App\Middlewares;
 
 use Kernel\Middleware;
-use Kernel\Response;
 use Kernel\Session;
 
 class Admin extends Middleware
@@ -11,16 +10,15 @@ class Admin extends Middleware
 
     private $session;
 
-    public function handler()
+    public function handle()
     {
 
-        $route = route();
-        $this->session = new Session();
-        if (!$this->session::has('auth') && $route->getUri() != 'login') {
-            header('Location: /login');
+        $route = router();
+        $this->session = Session::getInstance();
+        if (!$this->session::has('adminAuth')) {
+            header('Location: ' . route('auth.adminLogin'));
             return false;
         }
-
         return true;
 
     }

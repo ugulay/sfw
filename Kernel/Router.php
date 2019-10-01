@@ -9,8 +9,34 @@ use ReflectionMethod;
 class Router
 {
 
+    private static $instance = null;
+
     private $_request, $_raw, $_uri, $_method = false;
-    static $_named, $_routes = [];
+
+    private $fastRoute;
+    private $groupData;
+    private $middleware = [];
+    private $currentMiddleware;
+    private $currentRoute;
+    private $routes;
+    private $named;
+
+    public function __construct()
+    {
+        $this->fastRoute = new FastRoute\RouteCollector(
+            new FastRoute\RouteParser\Std(),
+            new FastRoute\DataGenerator\GroupCountBased()
+        );
+    }
+
+    public static function getInstance()
+    {
+        if (self::$instance == null) {
+            self::$instance = new self;
+        }
+
+        return self::$instance;
+    }
 
     public function getRequest()
     {
@@ -32,45 +58,100 @@ class Router
         return $this->_method;
     }
 
-    /**
-     * Set Route via File and Prefix
-     */
-    public static function bind($options, $route)
+    public function bind($options, $cb)
     {
-        self::$_routes[] = [$options, $route];
+        $this->groupData = $options;
+        call_user_func($cb);
+        $this->groupData = null;
     }
 
-    /**
-     * Route List
-     */
-    private function getRoutes(): array
+    public function getRoutes()
     {
-        return self::$_routes;
+        return $this->fastRoute->getData();
+    }
+
+    public function getNamed($name = null, $key = 'uri')
+    {
+
+        if (!$this->named) {
+            return null;
+        }
+
+        $named = $this->named;
+
+        if ($name == null) {
+            return $named;
+        }
+
+        if ($name !== null && isset($named[$name])) {
+            return $named[$name][$key];
+        }
+
+        return null;
+
+    }
+
+    public function addRoute($method, $uri, $action, $options = null)
+    {
+
+        if ($this->groupData) {
+            $data = $this->groupData;
+            $uri = $this->groupData['prefix'] . '/' . $uri;
+        }
+
+        $uri = $this->fixRoute($uri);
+
+        if ($options != null) {
+            $data = array_merge($data, $options);
+        }
+
+        $data['action'] = $action;
+        $data['current'] = false;
+
+        $this->addNamed($data, $method, $uri);
+
+        $this->fastRoute->addRoute($method, $uri, $data);
+    }
+
+    public function addNamed($data, $method, $uri)
+    {
+        if (isset($data['name'])) {
+            $this->named[$data['name']] = [
+                'method' => $method,
+                'uri' => $uri,
+                'namespace' => $data['namespace'],
+                'action' => $data['action'],
+                'full' => !is_callable($data['action']) ? $data['namespace'] . '\\' . $data['action'] : null,
+                'middleware' => $data['middleware'],
+                'prefix' => $data['prefix'],
+                'current' => false,
+            ];
+        }
+    }
+
+    public function setNamed($name, $key, $val)
+    {
+        if (isset($this->named[$name])) {
+            $this->named[$name][$key] = $val;
+        }
     }
 
     /**
      * Fix the given route
      */
-    private function fixRoute($route): string
+    public function fixRoute($route): string
     {
         return trim(preg_replace('/\/{2,}/', '/', $route), '/');
     }
 
-    public static function named($name = null, $col = 'route')
+    public function setCurrentRoute($routeData)
     {
-        $arr = self::$_named;
+        $this->currentRoute = $routeData;
+    }
 
-        $get = array_key_exists($name, $arr);
-
-        if (!$get) {
-            return false;
-        }
-
-        if ($col == false) {
-            return $arr[$name];
-        }
-
-        return $arr[$name][$col];
+    public function getCurrentRoute()
+    {
+        return $this->currentRoute;
     }
 
     /**
@@ -80,80 +161,55 @@ class Router
     {
 
         $this->_method = $_SERVER['REQUEST_METHOD'];
-        $this->_raw = $this->_uri = $_SERVER['REQUEST_URI'];
+        $this->_raw = $this->_uri = urldecode($_SERVER['REQUEST_URI']);
         $this->_request = parse_url($this->_raw);
         $this->_uri = $this->fixRoute($this->_request['path']);
 
-        $allRoutes = $this->getRoutes();
-
-        $dispatcher = FastRoute\simpleDispatcher(
-
-            function (FastRoute\RouteCollector $r) use ($allRoutes) {
-
-                foreach ($allRoutes as $routesArr) {
-
-                    $options = $routesArr[0];
-
-                    $prefix = strlen($options['prefix']) ? $options['prefix'] . '/' : $options['prefix'];
-                    $namespace = strlen($options['namespace']) ? $options['namespace'] : '';
-
-                    $routes = $routesArr[1];
-
-                    foreach ($routes as $route) {
-
-                        $route[1] = $this->fixRoute($prefix . $route[1]);
-
-                        $name = isset($route[3]) && array_key_exists('name', $route[3]) ? $route[3]['name'] : false;
-
-                        if ($name) {
-                            self::$_named[$name] = [
-                                'route' => $route[1],
-                                'handler' => $namespace . $route[2],
-                                'method' => $route[0],
-                                'options' => $options,
-                            ];
-                        }
-
-                        $r->addRoute($route[0], $route[1], $namespace . $route[2]);
-
-                    }
-
-                }
-
-            }
-
+        return $this->handleRoute(
+            $this->_method,
+            $this->_uri,
+            $this->fastRoute->getData()
         );
-        print_r(self::$_named);
-
-        $routeInfo = $dispatcher->dispatch($this->_method, $this->_uri);
-
-        return $this->handleRoute($routeInfo);
 
     }
 
-    private function handleRoute($routeInfo)
+    private function handleRoute($method, $uri, $routeData)
     {
 
+        $dispatcher = new FastRoute\Dispatcher\GroupCountBased($routeData);
+
+        $routeInfo = $dispatcher->dispatch($method, $uri);
+
         switch ($routeInfo[0]) {
+
             case FastRoute\Dispatcher::FOUND:
 
                 $handler = $routeInfo[1];
                 $vars = $routeInfo[2];
 
-                if (is_callable($handler)) {
-                    return call_user_func_array($handler, $vars);
-                }
+                $this->setCurrentRoute($routeInfo);
+                $this->setNamed($handler['name'], 'current', true);
 
-                if (is_string($handler) && !is_callable($handler)) {
+                $action = $handler['action'];
 
-                    $controller = $handler;
-                    $method = 'index';
+                $this->currentMiddleware = $handler['middleware'];
 
-                    if (strpos($handler, '@') !== false) {
-                        list($controller, $method) = explode('@', $handler);
+                $middlewareControl = $this->next();
+
+                if ($middlewareControl === true) {
+
+                    if (is_callable($action)) {
+                        return call_user_func_array($action, $vars);
                     }
 
-                    return $this->runClass($controller, $method, $vars);
+                    if (is_string($action) && !is_callable($action)) {
+                        return $this->runClass($handler, $method, $vars);
+                    }
+
+                }
+
+                if ($middlewareControl !== true) {
+                    return $middlewareControl;
                 }
 
                 throw new \Exception('An error accquired. Route handler is not correct.');
@@ -163,18 +219,66 @@ class Router
                 $this->throwError();
                 break;
             case FastRoute\Dispatcher::METHOD_NOT_ALLOWED:
-                $allowedMethods = $routeInfo[1];
                 $this->throwError('Front/error403', 403);
                 break;
         }
 
     }
 
-    private function runClass($controller, $method, $vars)
+    public function getMiddleware()
+    {
+        return $this->currentMiddleware;
+    }
+
+    private function next()
     {
 
+        $middleware = $this->getMiddleware();
+
+        if (!class_exists($middleware) && !empty($middleware)) {
+            throw new \Exception($middleware . ' middleware not found.');
+        }
+
+        if ($middleware == null || $middleware == false) {
+            return true;
+        }
+
+        $mw = new $middleware;
+        $res = $mw->handle();
+
+        return false;
+
+    }
+
+    public function route($name, $key = 'uri')
+    {
+        return $this->getNamed($name, $key);
+    }
+
+    public function link($name, $replace = false)
+    {
+        $get = $this->route($name, 'uri');
+        if ($replace !== false) {
+            return preg_replace('/(\{.*?\})/', $get, $replace);
+        }
+        return $get;
+    }
+
+    private function runClass($handler, $method, $vars)
+    {
+
+        $controller = $handler['action'];
+        $namespace = $handler['namespace'];
+        $method = 'index';
+
+        if (strpos($controller, '@') !== false) {
+            list($controller, $method) = explode('@', $controller);
+        }
+
+        $controller = $namespace . '\\' . $controller;
+
         if (!class_exists($controller)) {
-            throw new \Exception($controller . ' Class not found.');
+            throw new \Exception($controller . ' class not found.');
         }
 
         $rc = new ReflectionClass($controller);

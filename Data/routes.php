@@ -2,38 +2,59 @@
 
 use Kernel\Router;
 
+$r = Router::getInstance();
+
 /**
  * DEFAULT
  */
-Router::bind([
-    'middleware' => '',
-    'name' => 'default',
+$r->bind([
     'prefix' => '',
-    'namespace' => '\App\Controllers\\',
-],
-    [
-        ['GET', '', 'Index@index'],
-        ['GET', '/language', 'Index@language'],
-    ]
-);
+    'middleware' => '',
+    'namespace' => '\App\Controllers',
+], function () use ($r) {
+    $r->addRoute('GET', '', 'Index@index', ['name' => 'main.index']);
+    $r->addRoute('GET', 'language', 'Index@language', ['name' => 'main.language']);
+});
 
 /**
  * AUTH
  */
-Router::bind([
-    'middleware' => '',
-    'name' => 'auth',
+$r->bind([
     'prefix' => 'auth',
-    'namespace' => '\App\Controllers\Auth\\',
-],
-    [
-        ['GET', '/', 'Login@index'],
-        ['POST', '/', 'Login@login'],
-        ['GET', '/registration', 'Register@registration', ['name' => 'auth.register']],
-        ['POST', '/registration', 'Register@register'],
-        ['GET', '/activation/{code}/', 'Register@activation'],
-        ['GET', '/admin', 'Admin@index'],
-        ['POST', '/admin', 'Admin@login'],
-        ['GET', '/logout', 'Login@logout'],
-    ]
-);
+    'middleware' => '',
+    'namespace' => '\App\Controllers\Auth',
+], function () use ($r) {
+    $r->addRoute('GET', '', 'Login@index', ['name' => 'auth.login']);
+    $r->addRoute('POST', '', 'Login@login', ['name' => 'auth.loginAction']);
+    $r->addRoute('GET', 'registration', 'Register@registration', ['name' => 'auth.register']);
+    $r->addRoute('POST', 'registration', 'Register@register', ['name' => 'auth.registerAction']);
+    $r->addRoute('GET', 'activation/{code}/', 'Register@activation', ['name' => 'auth.registerCode']);
+    $r->addRoute('GET', 'admin', 'Admin@index',['name' => 'auth.adminLogin']);
+    $r->addRoute('POST', 'admin', 'Admin@login');
+    $r->addRoute('GET', 'logout', 'Login@logout', ['name' => 'auth.logout']);
+});
+
+/**
+ * ADMIN
+ */
+$r->bind([
+    'prefix' => 'admin',
+    'middleware' => '\App\Middlewares\Admin',
+    'namespace' => '\App\Controllers\Admin',
+], function () use ($r) {
+    $r->addRoute('GET', '', 'Index@index', ['name' => 'admin.index']);
+    $r->addRoute('GET', 'asd/{asf}', function () {
+        return 'asd';
+    }, ['name' => 'admin.test']);
+});
+
+/**
+ * APP
+ */
+$r->bind([
+    'prefix' => 'home',
+    'middleware' => '\App\Middlewares\Auth',
+    'namespace' => '\App\Controllers\Home',
+], function () use ($r) {
+    $r->addRoute('GET', '', 'Index@index', ['name' => 'app.index']);
+});

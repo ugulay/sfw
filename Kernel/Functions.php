@@ -34,7 +34,7 @@ function tokenize($len = 32)
     return bin2hex($token);
 }
 
-function route()
+function router()
 {
     global $_router;
     return $_router;
@@ -64,6 +64,13 @@ function old($key = null)
     return \Kernel\Session::getFlashInput($key);
 }
 
-function sqlTimestamp(){
+function sqlTimestamp()
+{
     return date("Y-m-d H:i:s");
+}
+
+function route($name = null, $replace = false)
+{
+    $r = \Kernel\Router::getInstance();
+    return $r->link($name, $replace);
 }

@@ -5,6 +5,8 @@ define('DS', DIRECTORY_SEPARATOR);
 define('_DATA', ROOT . '/Data/');
 define('DEV', true);
 
+ob_start();
+
 /**
  * Debug Mode
  */
@@ -34,7 +36,7 @@ $_config->parse();
 /**
  * Start Session
  */
-\Kernel\Session::start();
+\Kernel\Session::getInstance();
 
 /**
  * Global functions
@@ -44,8 +46,7 @@ require ROOT . '/Kernel/Functions.php';
 /**
  * Router
  */
-require _DATA . 'routes.php';
-
 global $_router;
-$_router = new Kernel\Router();
+$_router = Kernel\Router::getInstance();
+require _DATA . 'routes.php';
 $_router->dispatch();
