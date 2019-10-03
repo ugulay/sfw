@@ -13,11 +13,7 @@ class Router
     private static $instance = null;
 
     private $_request, $_raw, $_uri, $_method = false;
-
-    private $fastRoute;
-    private $groupData;
-    private $currentRoute;
-    private $named;
+    private $fastRoute, $groupData, $currentRoute, $named;
 
     const FOUND = 1;
     const NOT_FOUND = 2;

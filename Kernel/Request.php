@@ -24,7 +24,23 @@ class Request
         $this->router = Router::getInstance();
         $routeInfo = $this->router->dispatch();
 
-        $response = $this->handle($routeInfo);
+        $response = new Response();
+
+        switch ($routeInfo) {
+            case Router::METHOD_NOT_ALLOWED:
+
+                $response->code(403)->showPage('Front/error403');
+                break;
+
+            case Router::NOT_FOUND:
+                $response->code(404)->showPage('Front/error404');
+                break;
+
+            default:
+                $response = $this->handle($routeInfo);
+                break;
+
+        }
 
         if ($response instanceof Response) {
             return $response;
@@ -49,6 +65,8 @@ class Request
         $this->method = $routeInfo[0];
         $this->vars = $routeInfo[2];
         $this->middleware = $routeInfo[1]['middleware'];
+        $this->session = Session::getInstance();
+        $this->inputs = $this->getInputs();
 
         $this->controllerAction = function () use ($routeInfo) {
             return $this->handleRoute($routeInfo);
