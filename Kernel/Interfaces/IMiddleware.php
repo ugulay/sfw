@@ -4,5 +4,5 @@ namespace Kernel\Interfaces;
 
 interface IMiddleware
 {
-    function handle();
+    function handle($request);
 }

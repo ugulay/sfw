@@ -29,7 +29,7 @@ $r->bind([
     $r->addRoute('GET', 'registration', 'Register@registration', ['name' => 'auth.register']);
     $r->addRoute('POST', 'registration', 'Register@register', ['name' => 'auth.registerAction']);
     $r->addRoute('GET', 'activation/{code}/', 'Register@activation', ['name' => 'auth.registerCode']);
-    $r->addRoute('GET', 'admin', 'Admin@index',['name' => 'auth.adminLogin']);
+    $r->addRoute('GET', 'admin', 'Admin@index', ['name' => 'auth.adminLogin']);
     $r->addRoute('POST', 'admin', 'Admin@login');
     $r->addRoute('GET', 'logout', 'Login@logout', ['name' => 'auth.logout']);
 });
@@ -44,8 +44,8 @@ $r->bind([
 ], function () use ($r) {
     $r->addRoute('GET', '', 'Index@index', ['name' => 'admin.index']);
     $r->addRoute('GET', 'asd/{asf}', function () {
-        return 'asd';
-    }, ['name' => 'admin.test']);
+        echo 'asd';
+    }, ['name' => 'admin.test','middleware' => '']);
 });
 
 /**

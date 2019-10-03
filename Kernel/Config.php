@@ -10,7 +10,7 @@ class Config
     public static $envFile = null;
     protected static $config;
 
-    public function source($file)
+    public function source($file = 'config')
     {
         $storage = new Storage();
         $storage->source(_DATA . $file . '.php');
@@ -26,6 +26,11 @@ class Config
             $_ENV[$key] = $val;
             self::$config[$key] = $val;
         }
+    }
+
+    public static function set($key = null, $val = null)
+    {
+        return self::$config[$key] = $val;
     }
 
     public static function get($key = null)

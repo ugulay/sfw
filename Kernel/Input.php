@@ -11,10 +11,20 @@ class Input
         return $method;
     }
 
+    public static function getContent()
+    {
+        return file_get_contents('php://input');
+    }
+
+    public static function uri()
+    {
+        return $_SERVER['REQUEST_URI'];
+    }
+
     public static function json($key = null, $default = null)
     {
-        $data = json_decode(file_get_contents("php://input"), true);
-        if (!array_key_exists($data[$key])) {
+        $data = json_decode(self::getContent(), true);
+        if (!isset($data[$key])) {
             return $default;
         }
 
@@ -23,7 +33,7 @@ class Input
 
     public static function get($key = null, $default = null)
     {
-        if ($_GET && array_key_exists($key, $_GET)) {
+        if (isset($_GET[$key])) {
             return $_GET[$key];
         }
 
@@ -32,7 +42,7 @@ class Input
 
     public static function post($key = null, $default = null)
     {
-        if ($_POST && array_key_exists($key, $_POST)) {
+        if (isset($_POST[$key])) {
             return $_POST[$key];
         }
 
@@ -41,7 +51,7 @@ class Input
 
     public static function file($key = null)
     {
-        if ($_FILES && array_key_exists($key, $_FILES)) {
+        if (isset($_FILES[$key])) {
             return $_FILES[$key];
         }
 
@@ -50,11 +60,16 @@ class Input
 
     public static function cookie($key = null, $default = null)
     {
-        if ($_COOKIE && array_key_exists($key, $_COOKIE)) {
+        if (isset($_COOKIE[$key])) {
             return $_COOKIE[$key];
         }
 
         return $default;
+    }
+
+    public static function all()
+    {
+        return $_GET + $_POST + $_FILES;
     }
 
 }
