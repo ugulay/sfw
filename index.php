@@ -29,17 +29,27 @@ require ROOT . '/Kernel/Autoload.php';
 require ROOT . '/Kernel/Functions.php';
 require _DATA . 'routes.php';
 
-Session::getInstance();
+$session = Session::getInstance();
 
 $config = new Config;
 $config->source('config');
 $config->parse();
 
 global $container;
+
 $container = new Container();
+
 $container['Config'] = $config->get();
-$container['Request'] = new Request;
-$container['Response'] = new Response;
+
+$container['Session'] = $session;
+
+$container['Request'] = function () {
+    return new Request;
+};
+
+$container['Response'] = function () {
+    return new Response;
+};
 
 $app = new Bootstrap($container);
 $app->boot();

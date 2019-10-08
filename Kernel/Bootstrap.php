@@ -30,7 +30,10 @@ class Bootstrap
         $this->config = self::$app['Config'];
         $this->request = self::$app['Request'];
 
-        $handle = $this->request->dispatch();
+        $handle = $this->request->dispatch(self::$app);
+
+d(app());
+
         $this->result = $handle;
     }
 

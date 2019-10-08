@@ -5,6 +5,7 @@ namespace Kernel;
 use Kernel\Input;
 use Kernel\Response;
 use Kernel\Router;
+use Pimple\Container;
 
 class Request
 {
@@ -12,19 +13,21 @@ class Request
     public $router;
     public $session;
     public $inputs;
+    private $container;
 
     public function getInputs()
     {
         return Input::all();
     }
 
-    public function dispatch()
+    public function dispatch(Container $container)
     {
 
+        $this->container = $container;
         $this->router = Router::getInstance();
         $routeInfo = $this->router->dispatch();
 
-        $response = new Response();
+        $response = app('Response');
 
         switch ($routeInfo) {
             case Router::METHOD_NOT_ALLOWED:
@@ -47,6 +50,7 @@ class Request
         } else {
             echo (string) $response;
         }
+
     }
 
     public function next($obj)
@@ -65,7 +69,7 @@ class Request
         $this->method = $routeInfo[0];
         $this->vars = $routeInfo[2];
         $this->middleware = $routeInfo[1]['middleware'];
-        $this->session = Session::getInstance();
+        $this->session = app('Session');
         $this->inputs = $this->getInputs();
 
         $this->controllerAction = function () use ($routeInfo) {

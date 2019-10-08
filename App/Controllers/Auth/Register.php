@@ -16,7 +16,7 @@ class Register extends Controller
 
     public function __construct()
     {
-        $this->session = new Session();
+        $this->session = app('Session');
     }
 
     public function registration()
@@ -58,8 +58,10 @@ class Register extends Controller
         $data['password'] = md5(trim($data['password']));
         $data['status'] = 0;
 
-        $user = new User;
-        $res = $user->addUser($data);
+        app('User', function () {
+            return new User;
+        });
+        $res = app('User')->addUser($data);
 
         if ($res) {
             $mail = \App\Controllers\Mail::sendActivationMail($data['activation_code'], $data["email"]);
@@ -77,7 +79,9 @@ class Register extends Controller
 
     public function activation($code = null)
     {
-        $user = new User;
+        app('User', function () {
+            return new User;
+        });
 
         $where['AND'] = [
             'status' => 0,
@@ -85,12 +89,12 @@ class Register extends Controller
             'activation_at' => null,
         ];
 
-        $get = $user->getUser($where);
+        $get = app('User')->getUser($where);
 
         if (!$get) {
             Session::flash('error', __('auth.activationCodeError'));
         } else {
-            $user->updateUser(['status' => 1, 'activation_at' => sqlTimestamp()], $where);
+            app('User')->updateUser(['status' => 1, 'activation_at' => sqlTimestamp()], $where);
             Session::flash('success', __('auth.activationCodeSuccess'));
         }
 

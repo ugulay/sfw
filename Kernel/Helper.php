@@ -59,7 +59,7 @@ class Helper
 
     public static function old($key = null)
     {
-        \Kernel\Session::start();
+        \Kernel\Session::getInstance();
         return \Kernel\Session::getFlashInput($key);
     }
 

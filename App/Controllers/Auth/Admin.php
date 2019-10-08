@@ -16,7 +16,7 @@ class Admin extends Controller
 
     public function __construct()
     {
-        $this->session = new Session();
+        $this->session = app('Session');
     }
 
     public function index()
@@ -44,7 +44,7 @@ class Admin extends Controller
 
         if ($validation->fails()) {
             Session::flash('error', $validation->getFails());
-            return Response::redirect('/auth');
+            return Response::redirect('/auth/admin');
         }
 
         $username = $validation->getInput('email');
@@ -55,31 +55,34 @@ class Admin extends Controller
             "email" => $username,
             "password" => $password,
             "status" => 1,
-            "root" => 1
+            "root" => 1,
         ]];
 
-        $user = new User;
-        $get = $user->checkLogin($where);
+        app('User', function () {
+            return new User;
+        });
+
+        $get = app('User')->checkLogin($where);
 
         if (!$get) {
             Session::flash('error', __('auth.loginFailed'));
-            return Response::redirect('/auth');
+            return Response::redirect('/auth/admin');
         }
 
-        $data = $user->getUser($where);
+        $data = app('User')->getUser($where);
 
-        Session::set('auth', true);
-        Session::set('user', $data["id"]);
+        Session::set('adminAuth', true);
+        Session::set('user', $data);
 
-        return Response::redirect('/dashboard');
+        return Response::redirect('/admin/dashboard');
 
     }
 
     public function logout()
     {
-        Session::del('auth');
+        Session::del('adminAuth');
         Session::del('user');
-        return Response::redirect('/auth');
+        return Response::redirect('/auth/admin');
     }
 
 }
