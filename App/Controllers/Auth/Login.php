@@ -16,7 +16,7 @@ class Login extends Controller
 
     public function __construct()
     {
-        $this->session = app('Session');
+        $this->session = Session::getInstance();
     }
 
     public function index()
@@ -57,18 +57,15 @@ class Login extends Controller
             "status" => 1,
         ]];
 
-        app('User',function(){
-            return new User;
-        });
-
-        $get = app('User')->checkLogin($where);
+        $user = new User;
+        $get = $user->checkLogin($where);
 
         if (!$get) {
             Session::flash('error', __('auth.loginFailed'));
             return Response::redirect('/auth');
         }
 
-        $data = app('User')->getUser($where);
+        $data = $user->getUser($where);
 
         Session::set('auth', true);
         Session::set('user', $data);

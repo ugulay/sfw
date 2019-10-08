@@ -16,7 +16,7 @@ class Admin extends Controller
 
     public function __construct()
     {
-        $this->session = app('Session');
+        $this->session = Session::getInstance();
     }
 
     public function index()
@@ -58,18 +58,16 @@ class Admin extends Controller
             "root" => 1,
         ]];
 
-        app('User', function () {
-            return new User;
-        });
+        $user = new User;
 
-        $get = app('User')->checkLogin($where);
+        $get = $user->checkLogin($where);
 
         if (!$get) {
             Session::flash('error', __('auth.loginFailed'));
             return Response::redirect('/auth/admin');
         }
 
-        $data = app('User')->getUser($where);
+        $data = $user->getUser($where);
 
         Session::set('adminAuth', true);
         Session::set('user', $data);

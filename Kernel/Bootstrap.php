@@ -32,8 +32,6 @@ class Bootstrap
 
         $handle = $this->request->dispatch(self::$app);
 
-d(app());
-
         $this->result = $handle;
     }
 

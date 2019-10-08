@@ -35,8 +35,6 @@ $config = new Config;
 $config->source('config');
 $config->parse();
 
-global $container;
-
 $container = new Container();
 
 $container['Config'] = $config->get();

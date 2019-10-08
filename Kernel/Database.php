@@ -20,7 +20,7 @@ final class Database
     public static function getInstance()
     {
         if (!isset(static::$instance)) {
-            static::$instance = app('Database', self::connect());
+            static::$instance = self::connect();
         }
         return static::$instance;
     }
@@ -44,7 +44,7 @@ final class Database
                 "charset" => 'utf8',
                 "server" => $cfg['DATABASE_HOST'],
                 "username" => $cfg['DATABASE_USER'],
-                "password" => $cfg['DATABASE_PASS'],
+                "password" => $cfg['DATABASE_PASS']
             ]);
         }
 
