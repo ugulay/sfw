@@ -53,7 +53,7 @@ class Response
         \Kernel\Session::flashInputs($inputs);
     }
 
-    public function redirect($location = null)
+    public static function redirect($location = null)
     {
         if ($location !== null) {
             return header('Location : ' . $location, true, 301);

@@ -5,8 +5,6 @@ namespace Kernel;
 use Kernel\Input;
 use Kernel\Model;
 
-use is_countable;
-
 class Validation
 {
 
@@ -15,6 +13,7 @@ class Validation
     const PREFIX = 'rule_';
 
     const ALLOWED_RULES = [
+        "slug",
         "required",
         "string",
         "numeric",
@@ -208,6 +207,40 @@ class Validation
         if ($check) {
             return $message;
         }
+        return true;
+    }
+
+    public function rule_slug($key = null, $param = null)
+    {
+
+        $data = $this->getInput($key);
+
+        $data = \Kernel\Helper::slugify($data);
+        $this->inputs[$key] = $data;
+
+        $key = $this->getAlias($key);
+
+        $message = __('validation.slug', $key);
+
+        $param = explode('.', $param);
+        $table = $param[0];
+        $col = $param[1];
+        $id = false;
+
+        $where = [$col => $data];
+
+        if (isset($param[2])) {
+            $id = $param[2];
+            $where["AND"][] = ['id[!]' => $id];
+            $where["AND"][] = [$col => $data];
+        }
+
+        $check = Model::DB()->count($table, $col, $where);
+
+        if ($check) {
+            return $message;
+        }
+
         return true;
     }
 

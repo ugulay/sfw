@@ -73,7 +73,7 @@ class Admin extends Controller
         Session::set('adminAuth', true);
         Session::set('user', $data);
 
-        return Response::redirect('/admin/dashboard');
+        return Response::redirect('/admin');
 
     }
 

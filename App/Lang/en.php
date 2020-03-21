@@ -42,5 +42,6 @@ return [
     "validation.lower" => "%s input need lower than \'%s\' value.",
     "validation.lowerEqual" => "%s input need lower than \'%s\' or equals.",
     "validation.unique" => "%s input value exists in database.",
+    "validation.slug" => "%s slug exists in database.",
     "validation.regex" => "%s input value is not pass the regular expression rule.",
 ];

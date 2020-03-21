@@ -42,5 +42,6 @@ return [
     "validation.lower" => "%s alanı \'%s\' değerinden küçük olmalıdır.",
     "validation.lowerEqual" => "%s alanı \'%s\' değerinden küçük veya eşit olmalıdır.",
     "validation.unique" => "%s alanındaki değer zaten mevcut.",
+    "validation.slug" => "%s slug zaten mevcut.",
     "validation.regex" => "%s alanındaki değer kurallı ifadele ile uyuşmuyor.",
 ];
