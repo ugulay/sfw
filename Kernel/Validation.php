@@ -5,6 +5,8 @@ namespace Kernel;
 use Kernel\Input;
 use Kernel\Model;
 
+use is_countable;
+
 class Validation
 {
 

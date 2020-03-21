@@ -69,6 +69,7 @@ class Admin extends Controller
 
         $data = $user->getUser($where);
 
+        Session::set('auth', true);
         Session::set('adminAuth', true);
         Session::set('user', $data);
 

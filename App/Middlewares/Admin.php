@@ -14,9 +14,7 @@ class Admin extends Middleware
     public function handle($request)
     {
 
-        $this->session = Session::getInstance();
-
-        if (!$this->session::has('adminAuth')) {
+        if (!$request->session::has('adminAuth2')) {
             header('Location: /' . Helper::route('auth.adminLogin'));
             return false;
         }

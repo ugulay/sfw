@@ -54,13 +54,17 @@ class Request
     }
 
     public function next($obj)
-    {
+    {       
+
         if (!empty($this->middleware)) {
-            return (new $this->middleware())->handle($obj);
-        } else {
-            $action = $this->controllerAction;
-            return $action($obj);
-        }
+            if(!(new $this->middleware())->handle($obj)){
+                return false;
+            }
+        } 
+        
+        $action = $this->controllerAction;
+        return $action($obj);
+        
     }
 
     private function handle($routeInfo)

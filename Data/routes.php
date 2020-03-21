@@ -43,9 +43,7 @@ $r->bind([
     'namespace' => '\App\Controllers\Admin',
 ], function () use ($r) {
     $r->addRoute('GET', '', 'Index@index', ['name' => 'admin.index']);
-    $r->addRoute('GET', 'asd/{asf}', function () {
-        echo 'asd';
-    }, ['name' => 'admin.test','middleware' => '']);
+
 });
 
 /**

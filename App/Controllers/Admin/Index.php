@@ -11,7 +11,7 @@ class Index extends Controller
 
     public function index()
     {
-        echo 'dashboard';
+        echo 'asd asdas';
     }
 
 }

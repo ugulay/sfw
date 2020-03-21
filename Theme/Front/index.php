@@ -7,7 +7,7 @@
 
     <div class="container py-3">
 
-        <?php if (!$data) {?>
+        <?php if (!isset($data)) {?>
 
             <div class="alert alert-info">
                 Blog yazısı bulunamadı
