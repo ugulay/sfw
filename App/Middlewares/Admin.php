@@ -9,12 +9,10 @@ use Kernel\Session;
 class Admin extends Middleware
 {
 
-    private $session;
-
     public function handle($request)
     {
 
-        if (!$request->session::has('adminAuth2')) {
+        if (!$request->session::has('adminAuth')) {
             header('Location: /' . Helper::route('auth.adminLogin'));
             return false;
         }
