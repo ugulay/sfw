@@ -1,7 +1,7 @@
-/Data/config.php
 /Cache
 /node_modules
 /Kernel/vendor
+/vendor
 /Data/*.db
 /.vscode
 /*.code-workspace

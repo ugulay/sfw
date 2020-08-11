@@ -72,4 +72,12 @@ class Input
         return $_GET + $_POST + $_FILES;
     }
 
+    public static function env($key = null)
+    {
+        if (isset($_ENV[$key])) {
+            return $_ENV[$key];
+        }
+
+        return false;
+    }
 }

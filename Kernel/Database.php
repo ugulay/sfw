@@ -11,11 +11,14 @@ final class Database
     protected static $instance = null;
 
     protected function __construct()
-    {}
+    {
+    }
     protected function __clone()
-    {}
+    {
+    }
     protected function __wakeup()
-    {}
+    {
+    }
 
     public static function getInstance()
     {
@@ -28,7 +31,7 @@ final class Database
     public static function connect()
     {
 
-        $cfg = Config::get();
+        $cfg = $_ENV;
 
         if ($cfg['DATABASE_TYPE'] == 'sqlite') {
             return new Medoo([
@@ -49,7 +52,5 @@ final class Database
         }
 
         return false;
-
     }
-
 }

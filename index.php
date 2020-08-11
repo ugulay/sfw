@@ -1,12 +1,11 @@
 <?php
 
-define('ROOT', __DIR__);
-define('DS', DIRECTORY_SEPARATOR);
-define('_DATA', ROOT . '/Data/');
-define('DEV', true);
+define("ROOT", __DIR__);
+define("DS", DIRECTORY_SEPARATOR);
+define("_DATA", ROOT . "/Data/");
+define("DEV", true);
 
 use Kernel\Bootstrap;
-use Kernel\Config;
 use Kernel\Request;
 use Kernel\Response;
 use Kernel\Session;
@@ -24,20 +23,23 @@ if (DEV) {
     error_reporting(0);
     ini_set('error_reporting', 0);
 }
+/**
+ * Composer Autoloader
+ */
+require ROOT . "/Kernel/Autoload.php";
 
-require ROOT . '/Kernel/Autoload.php';
-require ROOT . '/Kernel/Functions.php';
-require _DATA . 'routes.php';
+/**
+ * ENV Loader
+ */
+$dotenv = Dotenv\Dotenv::createImmutable(ROOT);
+$dotenv->load();
+
+require ROOT . "/Kernel/Functions.php";
+require _DATA . "routes.php";
 
 $session = Session::getInstance();
 
-$config = new Config;
-$config->source('config');
-$config->parse();
-
 $container = new Container();
-
-$container['Config'] = $config->get();
 
 $container['Session'] = $session;
 

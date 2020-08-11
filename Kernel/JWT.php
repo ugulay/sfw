@@ -29,13 +29,13 @@ class JWT
     static function payload($data)
     {
         $data['iat'] = (int)(date('U'));
-        $data['exp'] = (int)(date('U') + Config::get('JWT_EXPIRE'));
+        $data['exp'] = (int)(date('U') + $_ENV['JWT_EXPIRE']);
         return self::base64UrlEncode(json_encode($data));
     }
 
     static function signature($header = null, $payload = null)
     {
-        return hash_hmac(self::HMAC_ALG, $header . "." . $payload, Config::get('JWT_SECRET'));
+        return hash_hmac(self::HMAC_ALG, $header . "." . $payload, $_ENV['JWT_SECRET']);
     }
 
     public static function encode($data)

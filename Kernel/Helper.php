@@ -43,10 +43,10 @@ class Helper
     {
         \Kernel\Session::start();
         $lang = \Kernel\Session::get('language');
-        $lang = $lang ? $lang : \Kernel\Config::get('DEFAULT_LANG');
+        $lang = $lang ? $lang : $_ENV["DEFAULT_LANG"];
         $file = ROOT . '/App/Lang/' . $lang . '.php';
         if (!is_readable($file)) {
-            \Kernel\Session::set('language', \Kernel\Config::set('DEFAULT_LANG'));
+            \Kernel\Session::set('language', $_ENV["DEFAULT_LANG"]);
             throw new \Exception($file . ' lang file load failed.');
         }
         $lang = require $file;

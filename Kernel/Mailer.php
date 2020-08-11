@@ -15,7 +15,7 @@ class Mailer
 
     public function __construct()
     {
-        $cfg = Config::get();
+        $cfg = $_ENV;
         $this->mailer = new PHPMailer(true);
         $this->mailer->isSMTP();
         $this->mailer->Host = $cfg["SMTP_HOST"];

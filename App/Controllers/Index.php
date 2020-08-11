@@ -20,7 +20,7 @@ class Index extends Controller
     public function language()
     {
         $language = Input::get('key');
-        $defaultLang = Config::get('DEFAULT_LANG');
+        $defaultLang = $_ENV['DEFAULT_LANG'];
         if (is_readable(ROOT . '/App/Lang/' . $language . '.php')) {
             Session::set('language', $language);
         }
