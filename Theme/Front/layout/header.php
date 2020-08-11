@@ -21,7 +21,7 @@
 
     <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
 
-      <a class="navbar-brand" href="/">Görev Tanımı</a>
+      <a class="navbar-brand" href="/">Blog</a>
 
       <ul class="navbar-nav ml-auto mt-2 mt-lg-0">
       <?php if (!\Kernel\Session::get('auth')) {?>

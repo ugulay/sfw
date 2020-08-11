@@ -1,6 +1,6 @@
 </div>
   <footer class="bg-white text-center p-2">
-    <span class="copyRight">Görev Tanımı 2018 <?php /*| Powered By <span style="font-weight:bolder;"><span style="color:#ff6c00;">T</span>-Soft</span> */ ?></span>
+    <span class="copyRight">Blog 2018 </span>
   </footer>
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->

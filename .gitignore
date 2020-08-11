@@ -6,3 +6,4 @@
 /.vscode
 /*.code-workspace
 /.idea
+/.env
