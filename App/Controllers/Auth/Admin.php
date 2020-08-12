@@ -2,7 +2,7 @@
 
 namespace App\Controllers\Auth;
 
-use App\Models\User;
+use App\Models\Account;
 use Kernel\Controller;
 use Kernel\Response;
 use Kernel\Session;
@@ -49,25 +49,24 @@ class Admin extends Controller
 
         $username = $validation->getInput('email');
         $password = $validation->getInput('password');
-        $password = md5($password);
+        $password = hash_hmac("sha512",$password,$_ENV["SECRET_KEY"]);
 
-        $where = ['AND' => [
+        $where = ["AND" => [
             "email" => $username,
             "password" => $password,
-            "status" => 1,
-            "root" => 1,
+            "status" => 2
         ]];
 
-        $user = new User;
+        $user = new Account;
 
         $get = $user->checkLogin($where);
-
+        
         if (!$get) {
             Session::flash('error', __('auth.loginFailed'));
             return Response::redirect('/auth/admin');
         }
 
-        $data = $user->getUser($where);
+        $data = $user->getAccount($where);
 
         Session::set('auth', true);
         Session::set('adminAuth', true);

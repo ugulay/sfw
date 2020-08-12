@@ -27,7 +27,7 @@ class Bootstrap
     private function make()
     {
 
-        $this->request = self::$app['Request'];
+        $this->request = self::$app["Request"];
 
         $handle = $this->request->dispatch(self::$app);
 
@@ -39,5 +39,4 @@ class Bootstrap
         $this->make();
         return $this->result;
     }
-
 }

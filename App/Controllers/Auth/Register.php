@@ -2,7 +2,7 @@
 
 namespace App\Controllers\Auth;
 
-use App\Models\User;
+use App\Models\Account;
 use Kernel\Controller;
 use Kernel\Response;
 use Kernel\Session;
@@ -31,14 +31,12 @@ class Register extends Controller
         $validation = new Validation;
 
         $validation->rules('post', [
-            "name" => ['required', 'string', 'min' => 2],
-            "surname" => ['required', 'string', 'min' => 2, 'max' => 10],
+            "username" => ['required', 'string', 'min' => 8],
             "email" => ['required', 'email', 'unique' => 'users.email'],
             "password" => ['required'],
             "password2" => ['required', 'same' => 'password'],
         ], [
-            "name" => __('auth.name'),
-            "surname" => __('auth.surname'),
+            "username" => __('auth.name'),
             "email" => __('auth.emailAddress'),
             "password" => __('auth.password'),
             "password2" => __('auth.passwordRepeat'),
@@ -54,12 +52,12 @@ class Register extends Controller
 
         $data = $validation->getInputs();
         unset($data['password2']);
-        $data['activation_code'] = tokenize(64);
-        $data['password'] = md5(trim($data['password']));
+        $data['activation_code'] = randomize(64);
+        $data['password'] = hash_hmac("sha512", $data["password"], $_ENV["SECRET_KEY"]);
         $data['status'] = 0;
 
-        $user = new User;
-        $res = $user->addUser($data);
+        $user = new Account;
+        $res = $user->addAccount($data);
 
         if ($res) {
             $mail = \App\Controllers\Mail::sendActivationMail($data['activation_code'], $data["email"]);
@@ -72,31 +70,27 @@ class Register extends Controller
         }
 
         return Response::redirect('/auth/registration');
-
     }
 
     public function activation($code = null)
     {
-        $user = new User;
+        $user = new Account;
 
         $where['AND'] = [
             'status' => 0,
-            'activation_code' => $code,
-            'activation_at' => null,
+            'activation_code' => $code
         ];
 
-        $get = $user->getUser($where);
+        $get = $user->getAccount($where);
 
         if (!$get) {
             Session::flash('error', __('auth.activationCodeError'));
         } else {
-            $user->updateUser(['status' => 1, 'activation_at' => sqlTimestamp()], $where);
+            $user->updateAccount(['status' => 1], $where);
             Session::flash('success', __('auth.activationCodeSuccess'));
         }
 
         $view = new View();
         $view->render('Front/Auth/Activation');
-
     }
-
 }

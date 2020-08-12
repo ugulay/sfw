@@ -2,7 +2,7 @@
 
 namespace App\Controllers\Auth;
 
-use App\Models\User;
+use App\Models\Account;
 use Kernel\Controller;
 use Kernel\Response;
 use Kernel\Session;
@@ -49,7 +49,7 @@ class Login extends Controller
 
         $username = $validation->getInput('email');
         $password = $validation->getInput('password');
-        $password = md5($password);
+        $password = hash_hmac("sha512",$password,$_ENV["SECRET_KEY"]);
 
         $where = ['AND' => [
             "email" => $username,
@@ -57,7 +57,7 @@ class Login extends Controller
             "status" => 1,
         ]];
 
-        $user = new User;
+        $user = new Account;
         $get = $user->checkLogin($where);
 
         if (!$get) {
@@ -65,7 +65,7 @@ class Login extends Controller
             return Response::redirect('/auth');
         }
 
-        $data = $user->getUser($where);
+        $data = $user->getAccount($where);
 
         Session::set('auth', true);
         Session::set('user', $data);

@@ -2,23 +2,10 @@
 
 namespace Kernel;
 
-use Kernel\Config;
-use Medoo\Medoo;
-
 final class Database
 {
 
     protected static $instance = null;
-
-    protected function __construct()
-    {
-    }
-    protected function __clone()
-    {
-    }
-    protected function __wakeup()
-    {
-    }
 
     public static function getInstance()
     {
@@ -31,26 +18,13 @@ final class Database
     public static function connect()
     {
 
-        $cfg = $_ENV;
-
-        if ($cfg['DATABASE_TYPE'] == 'sqlite') {
-            return new Medoo([
-                "database_type" => $cfg['DATABASE_TYPE'],
-                "database_file" => _DATA . '/' . $cfg['DATABASE_FILE'],
-            ]);
-        }
-
-        if ($cfg['DATABASE_TYPE'] == 'mysql') {
-            return new Medoo([
-                "database_type" => $cfg['DATABASE_TYPE'],
-                "database_name" => $cfg['DATABASE_NAME'],
-                "charset" => 'utf8',
-                "server" => $cfg['DATABASE_HOST'],
-                "username" => $cfg['DATABASE_USER'],
-                "password" => $cfg['DATABASE_PASS']
-            ]);
-        }
-
-        return false;
+        return new \Medoo\Medoo([
+            "database_type" => $_ENV["DATABASE_TYPE"],
+            "database_name" => $_ENV["DATABASE_NAME"],
+            "charset" => "utf8",
+            "server" => $_ENV["DATABASE_HOST"],
+            "username" => $_ENV["DATABASE_USER"],
+            "password" => $_ENV["DATABASE_PASS"]
+        ]);
     }
 }

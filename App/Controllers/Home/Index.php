@@ -2,7 +2,6 @@
 
 namespace App\Controllers\Home;
 
-use Kernel\Config;
 use Kernel\Controller;
 use Kernel\Input;
 use Kernel\Session;

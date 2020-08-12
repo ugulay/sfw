@@ -31,17 +31,19 @@ require ROOT . "/Kernel/Autoload.php";
 /**
  * ENV Loader
  */
-$dotenv = Dotenv\Dotenv::createImmutable(ROOT);
+$dotenv = Dotenv\Dotenv::createImmutable(ROOT, ".env", true, "UTF-8");
 $dotenv->load();
 
-require ROOT . "/Kernel/Functions.php";
+/**
+ * Helper and Routes
+ */
+require ROOT . "/Kernel/Helper.php";
 require _DATA . "routes.php";
 
-$session = Session::getInstance();
 
 $container = new Container();
 
-$container['Session'] = $session;
+$container['Session'] = Session::getInstance();
 
 $container['Request'] = function () {
     return new Request;

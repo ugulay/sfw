@@ -43,13 +43,8 @@
                         <div class="card-body">
 
                             <div class="form-group">
-                                <label><?=__('auth.name')?> *</label>
-                                <input type="text" name="name" class="form-control" value="<?=old("name")?>">
-                            </div>
-
-                            <div class="form-group">
-                                <label><?=__('auth.surname')?> *</label>
-                                <input type="text" name="surname" class="form-control" value="<?=old("surname")?>">
+                                <label><?=__('auth.username')?> *</label>
+                                <input type="text" name="username" class="form-control" value="<?=old("username")?>">
                             </div>
 
                             <div class="form-group">

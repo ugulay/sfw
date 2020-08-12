@@ -33,5 +33,4 @@ class Post extends Controller
         $result = $data->getPost(['status' => 1, 'slug' => $slug], $start = 0, $limit = 10);
         return $result;
     }
-
 }
