@@ -15,7 +15,6 @@ function slugify($text): string
     return \Kernel\Slugger::slugify($text);
 }
 
-
 function randomize(
     int $length = 64,
     string $keyspace = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'

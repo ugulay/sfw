@@ -9,7 +9,8 @@ class View
     protected $_dir = ROOT . '/Theme/';
     public $_vars, $_extend, $_blocks, $_buffer;
 
-    function var ($key = null, $val = null) {
+    function var($key = null, $val = null)
+    {
         $this->_vars[$key] = $val;
     }
 
@@ -57,21 +58,19 @@ class View
         }
 
         return $this->_blocks[$name];
-
     }
 
-    public function placeholder($name = null,$default = null, $return = false)
+    public function placeholder($name = null, $default = null, $return = false)
     {
         $data = $this->getBlock($name);
         $data = $data ? $data : $default;
 
-        if($return){
+        if ($return) {
             return (string) $data;
         }
 
         echo (string) $data;
         return;
-            
     }
 
     public function getBlock($name = null)
@@ -112,7 +111,5 @@ class View
         }
 
         return $this->_buffer;
-
     }
-
 }

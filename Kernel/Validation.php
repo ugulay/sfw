@@ -215,7 +215,7 @@ class Validation
 
         $data = $this->getInput($key);
 
-        $data = \Kernel\Helper::slugify($data);
+        $data = slugify($data);
         $this->inputs[$key] = $data;
 
         $key = $this->getAlias($key);
@@ -256,7 +256,6 @@ class Validation
         foreach ($rules as $rule => $param) {
             $this->check($rule, [$key, $param]);
         }
-
     }
 
     public function check($rule = null, $param = [])
@@ -325,5 +324,4 @@ class Validation
         }
         return $key;
     }
-
 }
