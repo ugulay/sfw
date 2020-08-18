@@ -10,6 +10,11 @@ function old(string $key)
     return \Kernel\Session::getFlashInput($key);
 }
 
+function slugify($text): string
+{
+    return \Kernel\Slugger::slugify($text);
+}
+
 
 function randomize(
     int $length = 64,
@@ -24,4 +29,10 @@ function randomize(
         $pieces[] = $keyspace[random_int(0, $max)];
     }
     return implode('', $pieces);
+}
+
+function routeLink($name = null, $replace = false): string
+{
+    $r = \Kernel\Router::getInstance();
+    return $r->link($name, $replace);
 }

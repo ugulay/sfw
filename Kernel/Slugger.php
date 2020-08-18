@@ -28,7 +28,7 @@ class Slugger
         return $this->model->DB()->count($this->model::TABLE, '*', [$column => $textOrSlug]) ? true : false;
     }
 
-    public static function slugify($text)
+    public static function slugify($text): string
     {
         $text = preg_replace('~[^\pL\d]+~u', '-', $text);
         $text = iconv('utf-8', 'us-ascii//TRANSLIT', $text);
@@ -36,7 +36,6 @@ class Slugger
         $text = trim($text, '-');
         $text = preg_replace('~-+~', '-', $text);
         $text = strtolower($text);
-        return $text;
+        return (string)$text;
     }
-
 }

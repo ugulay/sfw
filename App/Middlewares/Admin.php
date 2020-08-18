@@ -4,7 +4,6 @@ namespace App\Middlewares;
 
 use Kernel\Helper;
 use Kernel\Middleware;
-use Kernel\Session;
 
 class Admin extends Middleware
 {
@@ -13,11 +12,10 @@ class Admin extends Middleware
     {
 
         if (!$request->session::has('adminAuth')) {
-            header('Location: /' . Helper::route('auth.adminLogin'));
+            header('Location: /' . routeLink('auth.adminLogin'));
             return false;
         }
 
         return true;
-
     }
 }
