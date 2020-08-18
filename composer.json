@@ -1,5 +1,5 @@
 {
-    "name": "ugulay",
+    "name": "ugulay/sfw",
     "description": "Custom Simple Framework v1",
     "type": "project",
     "license": "MIT",
@@ -11,6 +11,7 @@
         "vlucas/phpdotenv": "^5.1"
     },
     "require-dev": {
-        "kint-php/kint": "^3.2"
+        "kint-php/kint": "^3.2",
+        "phpunit/phpunit": "9"
     }
 }
