@@ -8,7 +8,6 @@ use Kernel\Input;
 use ReflectionClass;
 use ReflectionMethod;
 
-
 class Router
 {
 

@@ -39,7 +39,10 @@ require ROOT . "/Kernel/Helper.php";
 /**
  * Routes and Services
  */
+global $routes;
 $routes = require _DATA . "routes.php";
+
+global $services;
 $services = require _DATA . "services.php";
 
 /**
