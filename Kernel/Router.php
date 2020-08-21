@@ -3,6 +3,7 @@
 namespace Kernel;
 
 use FastRoute;
+use Kernel\Controller;
 use Kernel\Input;
 use ReflectionClass;
 use ReflectionMethod;
@@ -10,8 +11,7 @@ use ReflectionMethod;
 class Router
 {
 
-    private static $instance = null;
-
+    private $containers;
     private $_request, $_raw, $_uri, $_method = false;
     private $fastRoute, $groupData, $currentRoute, $named;
 
@@ -20,17 +20,7 @@ class Router
     const METHOD_NOT_ALLOWED = 3;
     const METHOD_DELIMETER = '@';
 
-    public static function getInstance()
-    {
-
-        if (self::$instance == null) {
-            self::$instance = new self;
-        }
-
-        return self::$instance;
-    }
-
-    public function __construct()
+    function __construct()
     {
         $this->fastRoute = new FastRoute\RouteCollector(
             new FastRoute\RouteParser\Std(),
@@ -38,19 +28,24 @@ class Router
         );
     }
 
-    public function bind($options, $cb)
+    function setContainers($containers)
+    {
+        $this->containers = $containers;
+    }
+
+    function bind($options, $cb)
     {
         $this->groupData = $options;
         call_user_func($cb);
         $this->groupData = null;
     }
 
-    public function getRoutes()
+    function getRoutes()
     {
         return $this->fastRoute->getData();
     }
 
-    public function getNamed($name = null, $key = 'uri')
+    function getNamed($name = null, $key = 'uri')
     {
 
         if (!$this->named) {
@@ -68,10 +63,9 @@ class Router
         }
 
         return null;
-
     }
 
-    public function addRoute($method, $uri, $action, $options = null)
+    function addRoute($method, $uri, $action, $options = null)
     {
 
         if ($this->groupData) {
@@ -92,7 +86,7 @@ class Router
         $this->fastRoute->addRoute($method, $uri, $data);
     }
 
-    public function addNamed($data, $method, $uri)
+    function addNamed($data, $method, $uri)
     {
         if (isset($data['name'])) {
             $this->named[$data['name']] = [
@@ -110,17 +104,17 @@ class Router
     /**
      * Fix the given route
      */
-    public function fixRoute($route): string
+    function fixRoute($route): string
     {
         return trim(preg_replace('/\/{2,}/', '/', $route), '/');
     }
 
-    public function setCurrentRoute($routeData)
+    function setCurrentRoute($routeData)
     {
         $this->currentRoute = $routeData;
     }
 
-    public function getCurrentRoute()
+    function getCurrentRoute()
     {
         return $this->currentRoute;
     }
@@ -128,7 +122,7 @@ class Router
     /**
      * Dispatch
      */
-    public function dispatch()
+    function dispatch()
     {
 
         $this->_method = Input::method();
@@ -141,10 +135,9 @@ class Router
             $this->_uri,
             $this->fastRoute->getData()
         );
-
     }
 
-    private function match($method, $uri, $routeData)
+    function match($method, $uri, $routeData)
     {
 
         $dispatcher = new FastRoute\Dispatcher\GroupCountBased($routeData);
@@ -172,23 +165,21 @@ class Router
 
                 return self::METHOD_NOT_ALLOWED;
                 break;
-
         }
-
     }
 
-    public function getMiddleware()
+    function getMiddleware()
     {
         $mw = $this->getCurrentRoute();
         return isset($mw[1]['middleware']) ? $mw[1]['middleware'] : null;
     }
 
-    public function route($name, $key = 'uri')
+    function route($name, $key = 'uri')
     {
         return $this->getNamed($name, $key);
     }
 
-    public function link($name, $replace = false)
+    function link($name, $replace = false)
     {
         $get = $this->route($name, 'uri');
         if ($replace !== false) {
@@ -197,7 +188,10 @@ class Router
         return $get;
     }
 
-    public static function runClass($handler, $method, $vars)
+    /**
+     * Run class with given params
+     */
+    function runClass($handler, $method, $vars)
     {
 
         $controller = $handler['action'];
@@ -214,17 +208,96 @@ class Router
             throw new \Exception($controller . ' class not found.');
         }
 
-        $rc = new ReflectionClass($controller);
+        if (!class_exists($controller)) {
+            throw new \Exception($controller . ' class not found.');
+        }
 
-        $class = $rc->newInstance();
+        $rc = new ReflectionClass($controller);
+        $class = $this->getControllerClass($rc);
+        $class->containers = $this->containers;
 
         if ($rc->hasMethod($method)) {
             $rm = new ReflectionMethod($class, $method);
-            return $rm->invokeArgs($class, $vars);
+            return $this->getMethod($class, $rm, $vars);
         }
 
         throw new \Exception($method . ' action not found.');
-
     }
 
+    /**
+     * Get and parse Controller from ReflectionClass
+     */
+    function getControllerClass(ReflectionClass $rc)
+    {
+
+        if (!$rc->isSubclassOf(Controller::class)) {
+            throw new \Exception($rc->getName() . ' must be extends from Controller:class.');
+        }
+
+        if (!$rc->isInstantiable()) {
+            throw new \Exception($rc->getName() . ' is not instantiable.');
+        }
+
+        $classConstructer = $rc->getConstructor();
+
+        if (is_null($classConstructer)) {
+            return $rc->newInstanceWithoutConstructor();
+        }
+
+        $getConstructerParams = $this->resolveParams(
+            $classConstructer->getParameters()
+        );
+
+        return  $rc->newInstanceArgs($getConstructerParams);
+    }
+
+
+    /**
+     * Get and parse Controller from ReflectionClass
+     */
+    function getMethod(object $class, ReflectionMethod $rm, $vars = [])
+    {
+
+        $methodParams = $rm->getParameters();
+
+        if (empty($methodParams)) {
+            return $rm->invokeArgs($class, $vars);
+        }
+
+        $vars = $this->resolveParams($methodParams, $vars);
+
+        return $rm->invokeArgs($class, $vars);
+    }
+
+    /**
+     * Resolve params
+     */
+    function resolveParams($params, $combine = [])
+    {
+
+        foreach ($params as &$param) {
+
+            if (is_object($param) && $param->getClass()) {
+                // Search in containers
+                if ($this->containers->offsetExists($param->getClass()->getName())) {
+                    $param = $this->containers[$param->getClass()->getName()];
+                    continue;
+                }
+
+                // Search in autoloader
+                if (class_exists($param->getClass()->getName())) {
+                    $cls = new ReflectionClass($param->getClass()->getName());
+                    $param = $cls->newInstance();
+                    continue;
+                }
+            }
+
+            if (isset($combine[$param->getName()])) {
+                $param = $combine[$param->getName()];
+                continue;
+            }
+        }
+
+        return $params;
+    }
 }

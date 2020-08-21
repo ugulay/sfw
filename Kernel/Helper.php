@@ -1,5 +1,7 @@
 <?php
 
+use Kernel\Router;
+
 function __(string $key = null, $params = []): string
 {
     return (\Kernel\Language::getInstance())->__($key, $params);
@@ -32,6 +34,6 @@ function randomize(
 
 function routeLink($name = null, $replace = false): string
 {
-    $r = \Kernel\Router::getInstance();
-    return $r->link($name, $replace);
+    global $router;
+    return $router->link($name, $replace);
 }

@@ -2,41 +2,28 @@
 
 namespace Kernel;
 
-use Pimple\Container;
-
-class Bootstrap
+final class Bootstrap
 {
 
-    private $request;
-    private $result;
-    private $container;
+    public $router;
+    public $container;
 
-    static $app;
-
-    public function __construct(Container $container)
+    public function __construct($router, $container)
     {
+        $this->router = &$router;
         $this->container = &$container;
-        self::$app = $this->container;
-    }
-
-    public function add($name = null, $data = null)
-    {
-        self::$app[$name] = $data;
-    }
-
-    private function make()
-    {
-
-        $this->request = self::$app["Request"];
-
-        $handle = $this->request->dispatch(self::$app);
-
-        $this->result = $handle;
     }
 
     public function boot()
     {
-        $this->make();
-        return $this->result;
+
+        //Request Container from services.php
+        $request = $this->container["request"];
+
+        if (method_exists($request, "dispatch")) {
+            return $request->dispatch($this->router, $this->container);
+        }
+
+        throw new \Exception("Dispatcher not found on Requst::class");
     }
 }

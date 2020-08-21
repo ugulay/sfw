@@ -5,29 +5,33 @@ namespace Kernel;
 use Kernel\Input;
 use Kernel\Response;
 use Kernel\Router;
-use Pimple\Container;
 
-class Request
+use Kernel\Interfaces\IRequest;
+
+class Request implements IRequest
 {
 
     public $router;
     public $session;
     public $inputs;
-    private $container;
+    public $containers;
 
-    public function getInputs()
+    function getInputs()
     {
         return Input::all();
     }
 
-    public function dispatch(Container $container)
+    function dispatch($router, $containers)
     {
 
-        $this->container = $container;
-        $this->router = Router::getInstance();
+        $this->containers = $containers;
+
+        $this->router = $router;
+        $this->router->setContainers($this->containers);
+
         $routeInfo = $this->router->dispatch();
 
-        $response = new Response();
+        $response = new Response;
 
         switch ($routeInfo) {
             case Router::METHOD_NOT_ALLOWED:
@@ -42,7 +46,6 @@ class Request
             default:
                 $response = $this->handle($routeInfo);
                 break;
-
         }
 
         if ($response instanceof Response) {
@@ -50,24 +53,22 @@ class Request
         } else {
             echo (string) $response;
         }
-
     }
 
-    public function next($obj)
-    {       
+    function next($obj)
+    {
 
         if (!empty($this->middleware)) {
-            if(!(new $this->middleware())->handle($obj)){
+            if (!(new $this->middleware())->handle($obj)) {
                 return false;
             }
-        } 
-        
+        }
+
         $action = $this->controllerAction;
         return $action($obj);
-        
     }
 
-    private function handle($routeInfo)
+    function handle($routeInfo)
     {
 
         $this->method = $routeInfo[0];
@@ -83,18 +84,17 @@ class Request
         return $this->next($this);
     }
 
-    private function handleRoute($handler)
+    function handleRoute($handler)
     {
 
         $action = $handler[1]['action'];
 
         if (!is_callable($action)) {
-            $res = Router::runClass($handler[1], $this->method, $this->vars);
+            $res = $this->router->runClass($handler[1], $this->method, $this->vars);
         } else {
             $res = call_user_func_array($action, $this->vars);
         }
 
         return $res;
     }
-
 }
