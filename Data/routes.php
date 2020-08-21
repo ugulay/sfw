@@ -13,8 +13,8 @@ $r->bind([
     'namespace' => '\App\Controllers',
 ], function () use ($r) {
     $r->addRoute('GET', '', 'Index@index', ['name' => 'main.index']);
+    $r->addRoute('GET', 'test/{tParam}', 'Index@indexTest', ['name' => 'main.indexTest']);
     $r->addRoute('GET', 'language', 'Index@language', ['name' => 'main.language']);
-
     $r->addRoute('GET', 'contact', 'Contact@index', ['name' => 'app.contact']);
     $r->addRoute('POST', 'send', 'Contact@sendMail');
 });
@@ -46,7 +46,6 @@ $r->bind([
     'namespace' => '\App\Controllers\Admin',
 ], function () use ($r) {
     $r->addRoute('GET', '', 'Index@index', ['name' => 'admin.index']);
-
     $r->addRoute('GET', 'menu', 'Menu@index', ['name' => 'admin.menuIndex']);
     $r->addRoute('POST', 'menu/add', 'Menu@add', ['name' => 'admin.menuAdd']);
 });

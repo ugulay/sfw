@@ -6,10 +6,11 @@ use Kernel\Controller;
 use Kernel\Input;
 use Kernel\Session;
 use Kernel\View;
+use Kernel\JWT;
 
 class Index extends Controller
 {
- 
+
     public function index()
     {
         $view = new View();

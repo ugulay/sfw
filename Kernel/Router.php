@@ -189,6 +189,9 @@ class Router
         return $get;
     }
 
+    /**
+     * Run class with given params
+     */
     function runClass($handler, $method, $vars)
     {
 
@@ -212,17 +215,19 @@ class Router
 
         $rc = new ReflectionClass($controller);
         $class = $this->getControllerClass($rc);
-
         $class->containers = $this->containers;
 
         if ($rc->hasMethod($method)) {
             $rm = new ReflectionMethod($class, $method);
-            return $rm->invokeArgs($class, $vars);
+            return $this->getMethod($class, $rm, $vars);
         }
 
         throw new \Exception($method . ' action not found.');
     }
 
+    /**
+     * Get and parse Controller from ReflectionClass
+     */
     function getControllerClass(ReflectionClass $rc)
     {
 
@@ -235,27 +240,65 @@ class Router
         }
 
         $classConstructer = $rc->getConstructor();
-        $class = null;
 
         if (is_null($classConstructer)) {
-            $class = $rc->newInstanceWithoutConstructor();
-        } else {
-            $getConstructerParams = $this->resolveConstructerParams(
-                $classConstructer->getParameters()
-            );
-            $class = $rc->newInstanceArgs($getConstructerParams);
+            return $rc->newInstanceWithoutConstructor();
         }
 
-        return $class;
+        $getConstructerParams = $this->resolveParams(
+            $classConstructer->getParameters()
+        );
+
+        return  $rc->newInstanceArgs($getConstructerParams);
     }
 
-    function resolveConstructerParams($params)
+
+    /**
+     * Get and parse Controller from ReflectionClass
+     */
+    function getMethod(object $class, ReflectionMethod $rm, $vars = [])
     {
+
+        $methodParams = $rm->getParameters();
+
+        if (empty($methodParams)) {
+            return $rm->invokeArgs($class, $vars);
+        }
+
+        $vars = $this->resolveParams($methodParams, $vars);
+
+        return $rm->invokeArgs($class, $vars);
+    }
+
+    /**
+     * Resolve params
+     */
+    function resolveParams($params, $combine = [])
+    {
+
         foreach ($params as &$param) {
-            if ($this->containers[$param->getClass()->getName()]) {
-                $param = $this->containers[$param->getClass()->getName()];
+
+            if (is_object($param) && $param->getClass()) {
+                // Search in containers
+                if ($this->containers->offsetExists($param->getClass()->getName())) {
+                    $param = $this->containers[$param->getClass()->getName()];
+                    continue;
+                }
+
+                // Search in autoloader
+                if (class_exists($param->getClass()->getName())) {
+                    $cls = new ReflectionClass($param->getClass()->getName());
+                    $param = $cls->newInstance();
+                    continue;
+                }
+            }
+
+            if (isset($combine[$param->getName()])) {
+                $param = $combine[$param->getName()];
+                continue;
             }
         }
+
         return $params;
     }
 }
