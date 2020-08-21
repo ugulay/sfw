@@ -2,7 +2,7 @@
 
 use Kernel\Router;
 
-$r = Router::getInstance();
+$r = new Router;
 
 /**
  * DEFAULT
@@ -46,8 +46,9 @@ $r->bind([
     'namespace' => '\App\Controllers\Admin',
 ], function () use ($r) {
     $r->addRoute('GET', '', 'Index@index', ['name' => 'admin.index']);
-    
+
     $r->addRoute('GET', 'menu', 'Menu@index', ['name' => 'admin.menuIndex']);
     $r->addRoute('POST', 'menu/add', 'Menu@add', ['name' => 'admin.menuAdd']);
-
 });
+
+return $r;

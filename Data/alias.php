@@ -1,7 +1,0 @@
-<?php
-
-$alias = [
-
-];
-
-return $alias;

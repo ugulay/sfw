@@ -9,7 +9,7 @@ use Kernel\View;
 
 class Index extends Controller
 {
-
+ 
     public function index()
     {
         $view = new View();
@@ -23,7 +23,5 @@ class Index extends Controller
         if (is_readable(ROOT . '/App/Lang/' . $language . '.php')) {
             Session::set('language', $language);
         }
-
     }
-
 }

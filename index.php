@@ -6,10 +6,6 @@ define("_DATA", ROOT . "/Data/");
 define("DEV", true);
 
 use Kernel\Bootstrap;
-use Kernel\Request;
-use Kernel\Response;
-use Kernel\Session;
-use Pimple\Container;
 
 ob_start();
 
@@ -23,6 +19,7 @@ if (DEV) {
     error_reporting(0);
     ini_set('error_reporting', 0);
 }
+
 /**
  * Composer Autoloader
  */
@@ -35,23 +32,22 @@ $dotenv = Dotenv\Dotenv::createImmutable(ROOT, ".env", true, "UTF-8");
 $dotenv->load();
 
 /**
- * Helper and Routes
+ * Helper
  */
 require ROOT . "/Kernel/Helper.php";
-require _DATA . "routes.php";
 
+/**
+ * Routes and Services
+ */
+$routes = require _DATA . "routes.php";
+$services = require _DATA . "services.php";
 
-$container = new Container();
+/**
+ * Run the application
+ */
+$app = new Bootstrap(
+    $routes,
+    $services
+);
 
-$container['Session'] = Session::getInstance();
-
-$container['Request'] = function () {
-    return new Request;
-};
-
-$container['Response'] = function () {
-    return new Response;
-};
-
-$app = new Bootstrap($container);
 $app->boot();
