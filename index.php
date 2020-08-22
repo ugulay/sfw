@@ -6,6 +6,7 @@ define("_DATA", ROOT . "/Data/");
 define("DEV", true);
 
 use Kernel\Bootstrap;
+use Kernel\Session;
 
 ob_start();
 
@@ -30,6 +31,28 @@ require ROOT . "/Kernel/Autoload.php";
  */
 $dotenv = Dotenv\Dotenv::createImmutable(ROOT, ".env", true, "UTF-8");
 $dotenv->load();
+
+/**
+ * REDIS
+ */
+if ($_ENV["REDIS_USE"]) {
+
+    global $redisClient;
+    $redisClient = new Predis\Client([
+        "scheme" => $_ENV["REDIS_SCHEME"],
+        "host" => $_ENV["REDIS_HOST"],
+        "port" => $_ENV["REDIS_PORT"]
+    ], [
+        "prefix" => "sessions:"
+    ]);
+
+    if ($_ENV["SESSION_HANDLER"] == "redis") {
+        $redisSessionHandler = new \Predis\Session\Handler($redisClient);
+        $redisSessionHandler->register();
+    }
+}
+
+Session::start();
 
 /**
  * Helper

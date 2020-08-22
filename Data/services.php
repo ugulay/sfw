@@ -2,7 +2,6 @@
 
 use Kernel\JWT;
 use Pimple\Container;
-use Kernel\Session;
 use Kernel\Request;
 use Kernel\Response;
 
@@ -12,7 +11,11 @@ $container = new Container;
  * START OF CONTAINERS
  */
 
-$container["session"] = Session::getInstance();
+
+$container["redis"] = function(){
+    global $redisClient;
+    return $redisClient;
+};
 
 $container["request"] =  new Request;
 

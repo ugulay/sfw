@@ -2,19 +2,12 @@
 
 namespace Kernel;
 
+use \Kernel\Traits\Singleton;
+
 class Session
 {
 
-    private static $instance = null;
-
-    public static function getInstance()
-    {
-        if (self::$instance == null) {
-            self::$instance = new self;
-        }
-
-        return self::$instance;
-    }
+    use Singleton;
 
     public function __construct()
     {
@@ -25,7 +18,6 @@ class Session
     {
         if (!headers_sent() && !session_id()) {
             if (session_start()) {
-                session_regenerate_id();
                 return true;
             }
         }
@@ -43,7 +35,6 @@ class Session
             throw new \Exception('Session not started');
         }
         return array_key_exists($key, $_SESSION);
-
     }
 
     public static function get($key)
@@ -103,5 +94,4 @@ class Session
         }
         return $get;
     }
-
 }
